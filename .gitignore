@@ -1,0 +1,54 @@
+# Keep .gitkeep files.
+!.gitkeep
+
+# Wildcards
+*~
+~*
+
+# Mac
+.DS_Store
+
+# Angular 2 Dist
+/dist
+
+# Node
+/node_modules
+/npm-debug.log
+
+################################################################################
+# Angular 2
+################################################################################
+
+# compiled output
+/dist
+/tmp
+
+# dependencies
+/node_modules
+/bower_components
+
+# IDEs and editors
+/.idea
+/.vscode
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+#System Files
+.DS_Store
+Thumbs.db
