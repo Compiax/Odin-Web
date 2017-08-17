@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>ProjectODINWeb</title>
@@ -7,8 +8,27 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- CSS Imports -->
+  <link rel='stylesheet' href='/assets/MDB/css/font-awesome.min.css' type='text/css' />
+  <link rel='stylesheet' href='/assets/MDB/css/bootstrap.min.css' type='text/css' />
+  <link rel='stylesheet' href='/assets/MDB/css/mdb.min.css' type='text/css' />
+
+  <!-- JS Imports -->
+  <script type='text/javascript' src='/assets/MDB/js/popper.min.js'></script>
+  <script type='text/javascript' src='/assets/MDB/js/jquery-3.1.1.min.js'></script>
+  <script type='text/javascript' src='/assets/MDB/js/bootstrap.min.js'></script>
+  <script type='text/javascript' src='/assets/MDB/js/mdb.min.js'></script>
+  <script>
+    $(document).ready(function () {
+      $('.datepicker').pickadate()
+    });
+  </script>
 </head>
+
 <body>
   <app-root></app-root>
+</div>
 </body>
+
 </html>
