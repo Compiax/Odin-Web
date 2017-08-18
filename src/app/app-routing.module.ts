@@ -8,10 +8,6 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'home',
-    loadChildren: 'app/home/home.module'
-  },
-  {
     path: 'login',
     loadChildren: 'app/login/login.module'
   },
