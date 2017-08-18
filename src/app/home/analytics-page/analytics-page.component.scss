@@ -1,0 +1,5 @@
+@import '../../../scss/_variables.scss';
+
+.switch label input[type=checkbox]:checked+.lever:after {
+            background-color: $brand-primary;
+        }

@@ -1,18 +1,7 @@
-import { Component, Input, AfterViewInit} from '@angular/core';
-declare var $:any;
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './register.component.html'
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss']
 })
-
-export class RegisterComponent implements AfterViewInit {
-  title = 'Register';
-
-  ngAfterViewInit(){
-    setTimeout(function(){
-      $('.mdb-select').material_select();
-    }, 0);
-  }
-}
-
+export class RegisterComponent {}

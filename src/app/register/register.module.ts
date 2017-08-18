@@ -1,16 +1,19 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
+import { RegisterRoutingModule } from './register-routing.module'
 import { RegisterComponent } from './register.component';
+import { RegisterBoxComponent } from './register-box/register-box.component'
 
 @NgModule({
   declarations: [
-    RegisterComponent
+      RegisterComponent,
+      RegisterBoxComponent
   ],
   imports: [
-    BrowserModule
-  ],
-  providers: [],
-  bootstrap: [RegisterComponent]
+    CommonModule,
+    RegisterRoutingModule
+  ]
 })
-export class RegisterModule { }
+
+export default class RegisterModule { }

@@ -1,0 +1,12 @@
+.member {
+	background-color: #eeeeee;
+	border: 1px solid #e0e0e0;
+}
+
+.member:hover {
+	background-color: #e0e0e0;
+}
+
+.member > i {
+	cursor: pointer;
+}
