@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { RegisterRoutingModule } from './register-routing.module'
-import { RegisterComponent } from './register.component';
-import { RegisterBoxComponent } from './register-box/register-box.component'
+import { PackageManagerRoutingModule } from './package-manager-routing.module'
+import { PackageManagerComponent } from './package-manager.component';
+import { PackageManagerBoxComponent } from './package-manager-box/package-manager-box.component'
 
 @NgModule({
   declarations: [
-      RegisterComponent,
-      RegisterBoxComponent
+      PackageManagerComponent,
+      PackageManagerBoxComponent
   ],
   imports: [
     CommonModule,
-    RegisterRoutingModule
+    PackageManagerRoutingModule
   ]
 })
 
-export default class RegisterModule { }
+export default class PackageManagerModule { }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  templateUrl: './package-manager.component.html',
+  styleUrls: ['./package-manager.component.scss']
 })
-export class RegisterComponent {}
+export class PackageManagerComponent {}
