@@ -14,6 +14,10 @@ export const routes: Routes = [
   { 
     path: 'register',
     loadChildren: 'app/register/register.module'
+  },
+  { 
+    path: 'package-manager',
+    loadChildren: 'app/package-manager/package-manager.module'
   }
 ];
 
