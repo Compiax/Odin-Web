@@ -1,14 +1,14 @@
-import { AppPage } from './app.po';
+import { odinWebPage } from './app.po';
 
-describe('project-odin-web App', () => {
-  let page: AppPage;
+describe('odin-web App', () => {
+  let page: odinWebPage;
 
   beforeEach(() => {
-    page = new AppPage();
+    page = new odinWebPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display message saying app works', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
+    expect(page.getParagraphText()).toEqual('app works!');
   });
 });
