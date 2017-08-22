@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { RegisterRoutingModule } from './register-routing.module'
 import { RegisterComponent } from './register.component';
 import { RegisterBoxComponent } from './register-box/register-box.component'
-import { RegisterService } from './register-box/register-box.service'
-import { HttpModule } from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -13,11 +11,9 @@ import { HttpModule } from '@angular/http';
       RegisterBoxComponent
   ],
   imports: [
-    CommonModule,1
-    RegisterRoutingModule,
-    HttpModule
-  ],
-  providers: [ RegisterService ]
+    CommonModule,
+    RegisterRoutingModule
+  ]
 })
 
 export default class RegisterModule { }

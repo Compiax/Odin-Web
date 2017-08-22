@@ -4,14 +4,19 @@ import { RouterModule} from '@angular/router'
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { CommonModule } from './common/common.module';
+import { DesignspacePageComponent }   from './pages/designspace-page/designspace-page.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
+    DesignspacePageComponent,
   ],
   imports: [
     AppRoutingModule,
-    BrowserModule
+    BrowserModule,
+    CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
