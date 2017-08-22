@@ -8,21 +8,21 @@
 
         <!--Body-->
         <div class="md-form">
-            <input #name type="text" id="name" class="form-control">
-            <label for="name">Your name</label>
+            <input type="text" id="form3" class="form-control">
+            <label for="form3">Your name</label>
         </div>
         <div class="md-form">
-            <input #email type="text" id="email" class="form-control">
-            <label for="email">Your email</label>
+            <input type="text" id="form2" class="form-control">
+            <label for="form2">Your email</label>
         </div>
 
         <div class="md-form">
-            <input #password type="password" id="password" class="form-control">
-            <label for="password">Your password</label>
+            <input type="password" id="form4" class="form-control">
+            <label for="form4">Your password</label>
         </div>
 
         <div class="text-center">
-            <button (click)="add(name.value, email.value, password.value);" class="btn brand-color btn-block" routerLinkActive="active">Register</button>
+            <button routerLink="/home/documents" routerLinkActive="active" class="btn brand-color btn-block">Register</button>
         </div>
 
     </div>
