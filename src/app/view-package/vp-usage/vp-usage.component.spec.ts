@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PackageManagerComponent } from './package-manager.component';
+import { VPUsageComponent } from './vp-about.component';
 
-describe('PackageManagerComponent', () => {
-  let component: PackageManagerComponent;
-  let fixture: ComponentFixture<PackageManagerComponent>;
+describe('VPUsageComponent', () => {
+  let component: VPUsageComponent;
+  let fixture: ComponentFixture<VPUsageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PackageManagerComponent ]
+      declarations: [ VPUsageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PackageManagerComponent);
+    fixture = TestBed.createComponent(VPUsageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

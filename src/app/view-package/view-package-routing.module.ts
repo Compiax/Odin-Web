@@ -1,12 +1,12 @@
 import { NgModule }               from '@angular/core';
 import { RouterModule, Routes }   from '@angular/router';
 
-import { PackageManagerComponent } from './package-manager.component'
+import { ViewPackageComponent } from './view-package.component'
 
 const routes: Routes = [
   {
     path: '',
-    component: PackageManagerComponent
+    component: ViewPackageComponent
   }
 ];
 
@@ -18,4 +18,4 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ]
 })
-export class PackageManagerRoutingModule { }
+export class ViewPackageRoutingModule { }
