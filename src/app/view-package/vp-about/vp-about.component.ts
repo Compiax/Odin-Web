@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { VPAboutService } from './vp-about.service';
 
 @Component({
   selector: 'app-vp-about',
@@ -6,8 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./vp-about.component.scss']
 })
 export class VPAboutComponent implements OnInit {
+  constructor(private VPAboutServiceObj: VPAboutService) { }
 
-  constructor() { }
+  getPackageDescription(): Promise<String>{
+    return this.VPAboutServiceObj.getPackageDescription(1);
+  }
+
+  getPackageDownloadCount(): Promise<String>{
+    return this.VPAboutServiceObj.getPackageDownloadCount(1);
+  }
+  
+  getPackageStarsCount(): Promise<String>{
+    return this.VPAboutServiceObj.getPackageStarsCount(1);
+  }
 
   ngOnInit() {
   }
