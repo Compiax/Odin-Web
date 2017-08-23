@@ -1,0 +1,26 @@
+<!--View for package-->
+<br>
+<div class="container">
+  <br>
+  <br>
+  <!-- Package header -->
+  <div class="row">
+    <div class="col-lg-1">
+      <h1 class="vp-header-text"><span class="highlight-text">Odin/</span>Packages</h1>
+      <hr>
+    </div>
+  </div>
+  <!-- /Package header -->
+
+  <!--Panel-->
+  <div *ngFor="let test of getPackageTests()" class="card">
+    <h3 class="card-header primary-color white-text">Featured</h3>
+    <div class="card-body">
+      <h4 class="card-title"></h4>
+      <p class="card-text"></p>
+      <a class="btn btn-primary">View</a>
+    </div>
+  </div>
+  <!--/.Panel-->
+
+</div>

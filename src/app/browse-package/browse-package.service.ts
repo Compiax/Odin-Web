@@ -4,22 +4,14 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
-export class ViewPackageService {
+export class BrowsePackageService {
 
     private headers = new Headers({'Content-Type': 'application/json'});
     private postURL = 'localhost:8000';  // URL to web api
 
     constructor(private http: Http) { }
 
-    getPackageCreator(packageID: number): Promise<String> {
-        const url = `${this.postURL}/${packageID}`;
-        return this.http.get(url)
-        .toPromise()
-        .then(response => response.json().data as String)
-        .catch(this.handleError);
-    }
-
-    getPackageTitle(packageID: number): Promise<String> {
+    getPackages(packageID: number): Promise<String> {
         const url = `${this.postURL}/${packageID}`;
         return this.http.get(url)
         .toPromise()

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { VPUsageService } from './vp-usage.service';
+
 
 @Component({
   selector: 'app-vp-usage',
@@ -6,8 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./vp-usage.component.scss']
 })
 export class VPUsageComponent implements OnInit {
-  
-  constructor() { 
+  constructor(private VPUsageServiceObj: VPUsageService) { }
+
+  getPackageHowToUse(): Promise<String>{
+    return this.VPUsageServiceObj.getPackageHowToUse(1);
+  }
+
+  getPackageWhereToUse(): Promise<String>{
+    return this.VPUsageServiceObj.getPackageWhereToUse(1);
   }
 
   ngOnInit() {
