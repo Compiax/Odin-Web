@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { IsAuthenticatedGuard } from './_services/isAuthenticatedGuard.service';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -26,6 +27,25 @@ import { AuthService } from './_services/auth.service';
     ToastModule.forRoot()
   ],
   providers: [AuthService, IsAuthenticatedGuard],
+=======
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule
+  ],
+  providers: [],
+>>>>>>> 98b0f263b7699bb4e8f02d690f5e64545cc608c7
   bootstrap: [AppComponent]
 })
 export class AppModule { }

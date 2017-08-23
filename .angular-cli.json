@@ -19,6 +19,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
+<<<<<<< HEAD
         "styles.scss",
         "../node_modules/font-awesome/css/font-awesome.css",
         "../node_modules/ng2-toastr/bundles/ng2-toastr.min.css"
@@ -32,6 +33,15 @@
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
+=======
+        "styles.css"
+      ],
+      "scripts": [],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "source": "environments/environment.ts",
+        "dev": "environments/environment.dev.ts",
+>>>>>>> 98b0f263b7699bb4e8f02d690f5e64545cc608c7
         "prod": "environments/environment.prod.ts"
       }
     }
@@ -58,7 +68,11 @@
     }
   },
   "defaults": {
+<<<<<<< HEAD
     "styleExt": "scss",
+=======
+    "styleExt": "css",
+>>>>>>> 98b0f263b7699bb4e8f02d690f5e64545cc608c7
     "component": {}
   }
 }
