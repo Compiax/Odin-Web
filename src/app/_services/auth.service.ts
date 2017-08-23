@@ -10,10 +10,10 @@ export class AuthService {
   constructor(private http: Http) { }
 
   register(username: string, email: string, password: string) {
-    const url = 'http://localhost:3000/auth/login';
+    const url = 'http://localhost:3000/auth/register';
     const data = 'username=' + username + '&email=' + email + '&password=' + password;
 
-    return this.http.post(url, data, {headers: this.headers})
+    return this.http.post(url, data, {headers: this.headers, withCredentials: true})
     .toPromise()
     .then((res) => {
         return new Promise((resolve, reject) => {
@@ -27,7 +27,7 @@ export class AuthService {
     const data = 'username=' + username + '&password=' + password;
     const url = 'http://localhost:3000/auth/login';
 
-    return this.http.post(url, data, {headers: this.headers})
+    return this.http.post(url, data, {headers: this.headers, withCredentials: true})
     .toPromise()
     .then((res) => {
         return new Promise((resolve, reject) => {
@@ -48,7 +48,7 @@ export class AuthService {
     const url = 'http://localhost:3000/auth/loggedIn';
   
     console.log('Calling isLoggedIn');
-    return this.http.post(url, '', {headers: this.headers})
+    return this.http.post(url, '', {headers: this.headers, withCredentials: true})
     .toPromise();
   }
 
