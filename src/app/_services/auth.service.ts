@@ -52,4 +52,12 @@ export class AuthService {
     .toPromise();
   }
 
+  logOut() {
+    const url = environment.api_url + ':3000/auth/logout';
+
+    console.log('Calling isLoggedIn');
+    localStorage.setItem('currentUser', null);
+    return this.http.post(url, '', {headers: this.headers, withCredentials: true}).toPromise();
+  }
+
 }

@@ -2,14 +2,16 @@ import { AuthService } from '../auth.service';
 import 'rxjs/add/operator/toPromise';
 import { Headers, Http } from '@angular/http';
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 
 @Injectable()
 export class IsAuthenticatedGuard implements CanActivate {
   private headers = new Headers({'Content-Type': 'application/X-www-form-urlencoded'});
   public as: AuthService;
-  constructor(private http: Http, authService: AuthService) {
+  public r: Router;
+  constructor(private http: Http, authService: AuthService, router: Router) {
     this.as = authService;
+    this.r = router;
   }
 
   canActivate() {
@@ -22,11 +24,11 @@ export class IsAuthenticatedGuard implements CanActivate {
       .catch((res) => {
         if (res.status === 401) {
           console.log("Not logged in");
+          self.r.navigate(['/login']);
           resolve(false);
         };
       });
     });
-    // return true;
   }
 
 

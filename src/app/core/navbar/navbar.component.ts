@@ -1,3 +1,4 @@
+import { AuthService } from '../../_services/auth.service';
 import { Component, OnInit} from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
@@ -9,13 +10,23 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 export class NavbarComponent implements OnInit {
   private show = true;
  
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {
     this.eval();
   }
 
   ngOnInit() {
   }
 
+  // Logs out
+  logOut() {
+    this.authService.logOut()
+    .then(() => {
+      console.log("In promise");
+      this.router.navigateByUrl('/login');
+    });
+  }
+
+  // Checks if the navbar should be displayed
   private eval(){
     this.router.events.subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
@@ -32,5 +43,7 @@ export class NavbarComponent implements OnInit {
       }
     });
   }
+
+
 
 }
