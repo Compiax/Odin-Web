@@ -1,10 +1,10 @@
-import { OdinWebPage } from './app.po';
+import { odinWebPage } from './app.po';
 
 describe('odin-web App', () => {
-  let page: OdinWebPage;
+  let page: odinWebPage;
 
   beforeEach(() => {
-    page = new OdinWebPage();
+    page = new odinWebPage();
   });
 
   it('should display message saying app works', () => {

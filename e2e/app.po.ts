@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor';
 
-export class OdinWebPage {
+export class odinWebPage {
   navigateTo() {
     return browser.get('/');
   }
