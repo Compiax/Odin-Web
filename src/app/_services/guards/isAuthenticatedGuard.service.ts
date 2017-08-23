@@ -1,4 +1,4 @@
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
 import 'rxjs/add/operator/toPromise';
 import { Headers, Http } from '@angular/http';
 import { Injectable } from '@angular/core';
@@ -15,18 +15,18 @@ export class IsAuthenticatedGuard implements CanActivate {
   canActivate() {
     console.log('Calling canActivate');
     const self = this;
-    // return new Promise<boolean>((resolve, reject) => {
-    //   self.as.isLoggedIn().then(() => {
-    //     resolve(true);
-    //   })
-    //   .catch((res) => {
-    //     if (res.status === 401) {
-    //       console.log("Not logged in");
-    //       resolve(false);
-    //     };
-    //   });
-    // });
-    return true;
+    return new Promise<boolean>((resolve, reject) => {
+      self.as.isLoggedIn().then(() => {
+        resolve(true);
+      })
+      .catch((res) => {
+        if (res.status === 401) {
+          console.log("Not logged in");
+          resolve(false);
+        };
+      });
+    });
+    // return true;
   }
 
 

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api_url: 'https://api.albertprime.co.za'
+  api_url: 'http://api.albertprime.co.za'
 };

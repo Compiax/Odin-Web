@@ -24,8 +24,11 @@ export class NavbarComponent implements OnInit {
 
       console.log("Event");
       let url = evt.url.substr(1, evt.url.length - 1).replace('/', '-');
+      console.log(url);
       if (url === 'login' || url === 'register'){
         this.show = false;
+      } else {
+        this.show = true;
       }
     });
   }
