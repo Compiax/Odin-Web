@@ -32,6 +32,8 @@ script:
 
 after_success:
   # For dev branch
+  - echo $DOCKER_USER
+  - echo $DOCKER_PASS
   - |
       if [ "$TRAVIS_BRANCH" == "dev" ]; then
         docker build -t compiax/odin-web:dev-latest .

@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class AuthService {
   private headers = new Headers({'Content-Type': 'application/X-www-form-urlencoded',
                                  'Access-Control-Allow-Credentials': 'true',
-                                 'Access-Control-Allow-Origin': 'http://localhost:3000'});
+                                 'Access-Control-Allow-Origin': '*'});
   constructor(private http: Http) { }
 
   register(username: string, email: string, password: string) {
