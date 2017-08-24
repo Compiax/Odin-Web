@@ -1,3 +1,4 @@
+import { BrowsePackageService } from './browse-package.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -12,7 +13,8 @@ import { BrowsePackageComponent } from './browse-package.component';
   imports: [
     CommonModule,
     BrowsePackageRoutingModule
-  ]
+  ],
+  providers: [BrowsePackageService]
 })
 
 export default class BrowsePackageModule { 

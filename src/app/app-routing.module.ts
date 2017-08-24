@@ -1,4 +1,4 @@
-import { IsAuthenticatedGuard } from './_services/isAuthenticatedGuard.service';
+import { IsAuthenticatedGuard } from './_services/guards/isAuthenticatedGuard.service';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DesignspacePageComponent } from './pages/designspace-page/designspace-page.component';
@@ -7,7 +7,7 @@ export const routes: Routes = [
   {
     path: '',
     redirectTo: '/login',
-    pathMatch: 'full',
+    pathMatch: 'full'
   },
   {
     path: 'login',
@@ -19,14 +19,15 @@ export const routes: Routes = [
   },
   {
     path: 'packages',
-    loadChildren: 'app/pages/packages/packages-page.module',
+    loadChildren: 'app/browse-package/browse-package.module',
     canActivate: [IsAuthenticatedGuard]
   },
   {
     path: 'designSpace',
-    component: DesignspacePageComponent
+    component: DesignspacePageComponent,
+    canActivate: [IsAuthenticatedGuard]
   },
-  { 
+  {
     path: 'view-package',
     loadChildren: 'app/view-package/view-package.module',
     canActivate: [IsAuthenticatedGuard]
