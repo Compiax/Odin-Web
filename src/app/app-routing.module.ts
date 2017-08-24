@@ -23,8 +23,18 @@ export const routes: Routes = [
     canActivate: [IsAuthenticatedGuard]
   },
   {
-    path: 'designSpace',
+    path: 'packages/:id',
+    loadChildren: 'app/view-package/view-package.module',
+    canActivate: [IsAuthenticatedGuard]
+  },
+  {
+    path: 'projects/new',
     component: DesignspacePageComponent,
+    canActivate: [IsAuthenticatedGuard]
+  },
+  {
+    path: 'projects',
+    loadChildren: 'app/browse-projects/browse-projects.module',
     canActivate: [IsAuthenticatedGuard]
   },
   {
@@ -32,18 +42,6 @@ export const routes: Routes = [
     loadChildren: 'app/view-package/view-package.module',
     canActivate: [IsAuthenticatedGuard]
   },
-/*  {
-    path: 'documentation'
-    component: DesignspacePageComponent
-  },
-  {
-    path: 'profile'
-    component: DesignspacePageComponent
-  },
-  {
-    path: 'designSpace'
-    component: DesignspacePageComponent
-  },*/
 ];
 
 @NgModule({

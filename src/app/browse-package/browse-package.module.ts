@@ -1,9 +1,7 @@
-import { BrowsePackageService } from './browse-package.service';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { BrowsePackageRoutingModule } from './browse-package-routing.module';
 import { BrowsePackageComponent } from './browse-package.component';
+import { BrowsePackageRoutingModule } from './browse-package-routing.module';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
 
 @NgModule({
@@ -13,8 +11,7 @@ import { BrowsePackageComponent } from './browse-package.component';
   imports: [
     CommonModule,
     BrowsePackageRoutingModule
-  ],
-  providers: [BrowsePackageService]
+  ]
 })
 
 export default class BrowsePackageModule { 

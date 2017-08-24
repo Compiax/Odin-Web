@@ -6,7 +6,7 @@
   <!-- Package header -->
   <div class="row">
     <div class="col-lg-1">
-      <h1 class="vp-header-text"><span class="highlight-text">Odin/</span>Packages</h1>
+      <h1 class="vp-header-text"><span class="highlight-text"></span>Projects</h1>
       <hr>
     </div>
   </div>
@@ -14,12 +14,12 @@
 
   <!--Panel-->
   <div class="card">
-    <h3 class="card-header red darken-2 white-text">Packages</h3>
+    <h3 class="card-header red darken-2 white-text">Projects</h3>
     <div class="card-body">
       <div class="list-group">
-        <a [routerLink]="['/packages', item.id]" class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let item of components">
+        <a [routerLink]="['/projects', item.id]" class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let item of projects">
           <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1"><span class="red-text">{{ item.author }}</span>/{{ item.name }}</h5>
+            <h5 class="mb-1">{{ item.name }}</h5>
           </div>
           <p class="mb-1">{{ item.description }}</p>
         </a>

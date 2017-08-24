@@ -6,7 +6,7 @@
   <!-- Package header -->
   <div class="row">
     <div class="col-lg-12">
-      <small><u>projects/popular/neural-network</u></small>
+      <small><u>packages/{{ package.author }}/{{ package.name }}</u></small>
 
     </div>
   </div>
@@ -14,7 +14,7 @@
     <div class="col-lg-10">
 
       <br>
-      <h1 class="vp-header-text"><span class="highlight-text">{{getPackageCreator()}}/</span>{{getPackageTitle()}}</h1>
+      <h1 class="vp-header-text"><span class="highlight-text">{{ package.author }}/</span> {{ package.name }}</h1>
     </div>
     <div class="col-lg-2 hidden-md-down">
       <br>
@@ -28,7 +28,7 @@
   <!-- /Package header -->
 
   <!-- Nav tabs -->
-  <ul class="nav nav-tabs nav-justified danger-color-dark">
+  <ul class="nav nav-tabs nav-justified red darken-2">
     <li class="nav-item">
       <a class="nav-link active" data-toggle="tab" href="#about-panel" role="tab">About</a>
     </li>
@@ -43,17 +43,50 @@
   <div class="tab-content card">
     <!--Panel 1-->
     <div class="tab-pane fade in show active" id="about-panel" role="tabpanel">
-      <app-vp-about></app-vp-about>
+        <br>
+        <!-- Description and about the dev -->
+        <div class="row">
+          <div class="col-lg-10">
+            <h3>About</h3>
+            <p>{{ package.description }}</p>
+          </div>
+          <div class="col-lg-2 highlight-content red darken-2">
+            <p class="highlight-content-header">{{ package.stats.downloaded }} Downloads</p>
+            <p>{{ package.stats.stars }} Stars</p>
+          </div>
+        </div>
+        <!-- /Description and about the dev -->
+        
     </div>
     <!--/.Panel 1-->
     <!--Panel 2-->
     <div class="tab-pane fade" id="usage-panel" role="tabpanel">
-      <app-vp-usage></app-vp-usage>
+        <br>
+        <!-- Description and about the dev -->
+        <div class="row">
+          <div class="col-lg-12">
+            <h3>Usage</h3>
+            <p>{{ package.usage }}</p>
+          </div>
+        </div>
+        <!-- /Description and about the dev -->
+        
     </div>
     <!--/.Panel 2-->
     <!--Panel 3-->
     <div class="tab-pane fade" id="tests-panel" role="tabpanel">
-      <app-vp-test></app-vp-test>
+        <br>
+        <!-- Description and about the dev -->
+        <div class="row">
+          <div class="col-lg-12">
+            <h3>Test 1</h3>
+            <p>Some test description</p>
+            <br>
+            <h3>Test 2</h3>
+            <p>Some test description</p>
+            </div>
+        </div>
+        <!-- /Description and about the dev -->
     </div>
     <!--/.Panel 3-->
   </div>

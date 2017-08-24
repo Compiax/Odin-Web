@@ -1,3 +1,6 @@
+import { SessionService } from './_services/session.service';
+import { ProjectsService } from './_services/projects.service';
+import { ComponentsService } from './_services/components.service';
 import { NgIf } from '@angular/common';
 import { IsAuthenticatedGuard } from './_services/guards/isAuthenticatedGuard.service';
 import { AppComponent } from './app.component';
@@ -25,7 +28,7 @@ import { AuthService } from './_services/auth.service';
     BrowserAnimationsModule,
     ToastModule.forRoot()
   ],
-  providers: [AuthService, IsAuthenticatedGuard],
+  providers: [AuthService, IsAuthenticatedGuard, ComponentsService, ProjectsService, SessionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
