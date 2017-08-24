@@ -19,7 +19,7 @@ export const routes: Routes = [
   },
   {
     path: 'packages',
-    loadChildren: 'app/pages/packages/packages-page.module',
+    loadChildren: 'app/browse-package/browse-package.module',
     canActivate: [IsAuthenticatedGuard]
   },
   {
