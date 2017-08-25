@@ -29,3 +29,24 @@ script:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then npm run build:prod; fi
 
   - npm run test:no-watch
+
+# after_success:
+  # # For dev branch
+  # - echo $DOCKER_USER
+  # - echo $DOCKER_PASS
+  # - |
+  #     if [ "$TRAVIS_BRANCH" == "dev" ]; then
+  #       docker build -t compiax/odin-web:dev-latest .
+  #       docker tag compiax/odin-web:dev-latest compiax/odin-web:dev-latest
+  #       docker login -u $DOCKER_USER -p $DOCKER_PASS
+  #       docker push compiax/odin-web:dev-latest
+  #     fi
+
+  # # For master branch
+  # - |
+  #     if [ "$TRAVIS_BRANCH" == "master" ]; then
+  #       docker build -t compiax/odin-web:latest .
+  #       docker tag compiax/odin-web:latest compiax/odin-web:latest
+  #       docker login -u $DOCKER_USER -p $DOCKER_PASS
+  #       docker push compiax/odin-web:latest
+  #     fi

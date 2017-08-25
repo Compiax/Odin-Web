@@ -35,7 +35,9 @@ export class LoginBoxComponent implements OnInit {
   }
 
   handleErrors(res: any) {
+    console.log(res);
     const errors = JSON.parse(res._body).errors;
+    console.log(errors);
     if (errors[0].title === 'Bad Request') {
       this.toastr.info(errors[0].detail, 'Oops!');
     } else {

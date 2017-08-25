@@ -1,16 +1,16 @@
+import { environment } from '../../environments/environment';
 import 'rxjs/add/operator/toPromise';
 import { Headers, Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AuthService {
-  private headers = new Headers({'Content-Type': 'application/X-www-form-urlencoded',
-                                 'Access-Control-Allow-Credentials': 'true',
-                                 'Access-Control-Allow-Origin': 'http://localhost:3000'});
+  private headers = new Headers({'Content-Type': 'application/X-www-form-urlencoded'});
   constructor(private http: Http) { }
 
   register(username: string, email: string, password: string) {
-    const url = 'http://localhost:3000/auth/register';
+    const url = environment.api_url + '/auth/register';
+    console.log(url);
     const data = 'username=' + username + '&email=' + email + '&password=' + password;
 
     return this.http.post(url, data, {headers: this.headers, withCredentials: true})
@@ -25,8 +25,8 @@ export class AuthService {
 
   login(username: string, password: string) {
     const data = 'username=' + username + '&password=' + password;
-    const url = 'http://localhost:3000/auth/login';
-
+    const url = environment.api_url + '/auth/login';
+    console.log(url);
     return this.http.post(url, data, {headers: this.headers, withCredentials: true})
     .toPromise()
     .then((res) => {
@@ -45,11 +45,19 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    const url = 'http://localhost:3000/auth/loggedIn';
-  
+    const url = environment.api_url + '/auth/loggedIn';
+
     console.log('Calling isLoggedIn');
     return this.http.post(url, '', {headers: this.headers, withCredentials: true})
     .toPromise();
+  }
+
+  logOut() {
+    const url = environment.api_url + '/auth/logout';
+
+    console.log('Calling isLoggedIn');
+    localStorage.setItem('currentUser', null);
+    return this.http.post(url, '', {headers: this.headers, withCredentials: true}).toPromise();
   }
 
 }
