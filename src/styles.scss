@@ -1,7 +1,0 @@
-$mdb-path: "../node_modules/mdbootstrap";
-$roboto-font-path: "#{$mdb-path}/font/roboto/";
-
-@import 'scss/_variables.scss';
-@import 'scss/odin.scss';
-@import '../node_modules/bootstrap/scss/bootstrap.scss';
-@import '../node_modules/mdbootstrap/sass/mdb.scss';

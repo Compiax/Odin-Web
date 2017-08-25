@@ -1,22 +1,11 @@
-odin-Web
-=============
+Odin-WEB
+=====================
 
-odin web application. - http://www.odin.co.za
+@todo Add description
 
-[![Build Status](https://travis-ci.com/Compiax/odin-Web.svg?token=2zy95Usp6SqMTMFKKt37&branch=master)](https://travis-ci.com/Compiax/odin-Web)
+Build status:
 
-
-Requirements
-------------
-
-* docker ^1.12.6
-* docker-compose ^1.9.0
-
-
-Usage
------
-
-### Quick start:
-
-1. ```cd /path/to/repo```
-2. ```docker-compose up -d```
+| branch | status |
+| ------ | ------ |
+| master | @todo Add travis build status |
+| dev    | @todo Add travis build status |
