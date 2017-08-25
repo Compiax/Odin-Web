@@ -1,8 +1,9 @@
-import 'rxjs/add/operator/toPromise';
 import { Headers, Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from './../../environments/environment';
+
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class AuthService {
@@ -52,6 +53,14 @@ export class AuthService {
     console.log('Calling isLoggedIn');
     return this.http.post(url, '', {headers: this.headers, withCredentials: true})
     .toPromise();
+  }
+
+  logOut() {
+    const url = environment.api_url + '/auth/logout';
+
+    console.log('Calling isLoggedIn');
+    localStorage.setItem('currentUser', null);
+    return this.http.post(url, '', {headers: this.headers, withCredentials: true}).toPromise();
   }
 
 }
