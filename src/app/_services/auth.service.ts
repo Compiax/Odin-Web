@@ -9,7 +9,7 @@ export class AuthService {
   constructor(private http: Http) { }
 
   register(username: string, email: string, password: string) {
-    const url = environment.api_url + ':3000/auth/register';
+    const url = environment.api_url + '/auth/register';
     console.log(url);
     const data = 'username=' + username + '&email=' + email + '&password=' + password;
 
@@ -25,7 +25,7 @@ export class AuthService {
 
   login(username: string, password: string) {
     const data = 'username=' + username + '&password=' + password;
-    const url = environment.api_url + ':3000/auth/login';
+    const url = environment.api_url + '/auth/login';
     console.log(url);
     return this.http.post(url, data, {headers: this.headers, withCredentials: true})
     .toPromise()
@@ -45,15 +45,15 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    const url = environment.api_url + ':3000/auth/loggedIn';
-  
+    const url = environment.api_url + '/auth/loggedIn';
+
     console.log('Calling isLoggedIn');
     return this.http.post(url, '', {headers: this.headers, withCredentials: true})
     .toPromise();
   }
 
   logOut() {
-    const url = environment.api_url + ':3000/auth/logout';
+    const url = environment.api_url + '/auth/logout';
 
     console.log('Calling isLoggedIn');
     localStorage.setItem('currentUser', null);

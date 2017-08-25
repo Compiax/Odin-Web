@@ -9,7 +9,7 @@ export class SessionService {
   constructor(private http: Http) { }
 
   executeSession(data: any) {
-    const url = environment.api_url + ':3000/session/execute';
+    const url = environment.api_url + '/session/execute';
     console.log(url);
     return this.http.post(url, data, {headers: this.headers, withCredentials: true})
     .toPromise()

@@ -1,4 +1,5 @@
 import { AuthService } from '../auth.service';
+import { environment } from '../../environments/environment';
 import 'rxjs/add/operator/toPromise';
 import { Headers, Http } from '@angular/http';
 import { Injectable } from '@angular/core';
@@ -34,7 +35,7 @@ export class IsAuthenticatedGuard implements CanActivate {
 
 
   isLoggedIn() {
-    const url = 'http://localhost:3000/auth/loggedIn';
+    const url = environment.api_url + '/auth/loggedIn';
 
     return this.http.post(url, '', {headers: this.headers})
     .toPromise();

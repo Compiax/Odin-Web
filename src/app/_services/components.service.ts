@@ -8,7 +8,7 @@ export class ComponentsService {
   constructor(private http: Http) { }
 
   getComponents() {
-    const url = environment.api_url + ':3000/components/';
+    const url = environment.api_url + '/components/';
     return this.http.get(url, {withCredentials: true})
     .toPromise()
     .then((res) => {
@@ -20,7 +20,7 @@ export class ComponentsService {
   }
 
   getComponent(id: String): Promise<{}> {
-    const url = environment.api_url + ':3000/components/' + id;
+    const url = environment.api_url + '/components/' + id;
     return this.http.get(url, {withCredentials: true})
     .toPromise()
     .then((res) => {

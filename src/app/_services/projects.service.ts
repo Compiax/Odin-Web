@@ -8,7 +8,7 @@ export class ProjectsService {
   constructor(private http: Http) { }
 
   getProjects() {
-    const url = environment.api_url + ':3000/projects/';
+    const url = environment.api_url + '/projects/';
     return this.http.get(url, {withCredentials: true})
     .toPromise()
     .then((res) => {
@@ -20,7 +20,7 @@ export class ProjectsService {
   }
 
   getProject(id: String): Promise<{}> {
-    const url = environment.api_url + ':3000/projects/' + id;
+    const url = environment.api_url + '/projects/' + id;
     return this.http.get(url, {withCredentials: true})
     .toPromise()
     .then((res) => {
