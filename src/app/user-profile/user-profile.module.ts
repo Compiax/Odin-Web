@@ -1,17 +1,21 @@
-import { BrowseProjectsRoutingModule } from './browse-projects-routing.module';
-import { BrowseProjectsComponent } from './browse-projects.component';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule }   from '@angular/forms';
 
+import { RegisterRoutingModule } from './register-routing.module'
+import { RegisterComponent } from './register.component';
+import { RegisterBoxComponent } from './register-box/register-box.component'
 
 @NgModule({
   declarations: [
-      BrowseProjectsComponent
+      RegisterComponent,
+      RegisterBoxComponent
   ],
   imports: [
     CommonModule,
-    BrowseProjectsRoutingModule
+    RegisterRoutingModule,
+    FormsModule
   ]
 })
 
-export default class BrowseProjectsModule { }
+export default class RegisterModule { }
