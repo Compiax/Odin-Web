@@ -2,14 +2,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule }   from '@angular/forms';
 
-import { UserProfileRoutingModule } from './user-profile-routing.module'
+import { UserProfileRoutingModule } from './user-profile-routing.module';
 import { UserProfileComponent } from './user-profile.component';
-//binimport { UserProfileBoxComponent } from './user-profile-box/user-profile-box.component'
+import { ProfileBoxComponent } from './profile-box/profile-box.component';
+import { InfoBoxComponent } from './info-box/info-box.component';
 
 @NgModule({
   declarations: [
-      UserProfileComponent
-      //UserProfileBoxComponent
+      UserProfileComponent,
+      ProfileBoxComponent,
+      InfoBoxComponent
   ],
   imports: [
     CommonModule,
