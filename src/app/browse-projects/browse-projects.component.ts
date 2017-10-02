@@ -20,7 +20,6 @@ export class BrowseProjectsComponent implements OnInit {
     .then(function(res: any) {
       return new Promise<{}[]>((resolve, reject) => {
         let data: {}[];
-        console.log(res._body);
         if (JSON.parse(res._body).data === undefined) {
           // There are no projects
           return [];
@@ -33,9 +32,7 @@ export class BrowseProjectsComponent implements OnInit {
             created: item.attributes.created
           };
         });
-        console.log(data);
         self.projects = data;
-        console.log(self.projects);
       });
     });
   }

@@ -1,3 +1,4 @@
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule }               from '@angular/core';
 import { RouterModule, Routes }   from '@angular/router';
 
@@ -12,7 +13,9 @@ const routes: Routes = [
 
 @NgModule({
   exports: [
-    RouterModule 
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   imports: [
     RouterModule.forChild(routes)

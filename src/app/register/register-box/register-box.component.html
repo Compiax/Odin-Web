@@ -1,7 +1,7 @@
 <!--Form with header-->
 <div class="card">
     <div class="card-block">
-        <form (ngSubmit)="onSubmit(f.value)" #f="ngForm">
+        <form [formGroup]="registerForm" (ngSubmit)='onSubmit()' novalidate>
             <!--Header-->
             <div class="form-header brand-color">
                 <h3><i class="fa fa-user"></i> Register</h3>
@@ -9,17 +9,17 @@
     
             <!--Body-->
             <div class="md-form">
-                <input #nameInput type="text" name="username" class="form-control" ngModel>
-                <label for="form3">Your username</label>
+                <input type="text" id="username" formControlName="username" class="form-control" required>
+                <label for="username">Your username</label>
             </div>
             <div class="md-form">
-                <input type="text" name="email" class="form-control" ngModel>
-                <label for="form2">Your email</label>
+                <input type="text" id="email" formControlName="email" class="form-control" required>
+                <label for="email">Your email</label>
             </div>
     
             <div class="md-form">
-                <input type="password" name="password" class="form-control" ngModel>
-                <label for="form4">Your password</label>
+                <input type="password" id="password" formControlName="password" class="form-control" required>
+                <label for="password">Your password</label>
             </div>
     
             <div class="text-center">

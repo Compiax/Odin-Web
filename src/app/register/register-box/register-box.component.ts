@@ -1,6 +1,10 @@
+import { Response } from '@angular/http';
+import { User } from './../../_models/user.model';
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import { AuthService } from '../../_services/auth.service';
 import { Router} from '@angular/router';
+import { FormBuilder,  FormGroup,  Validators, ReactiveFormsModule } from '@angular/forms';
+
+import { AuthService } from '../../_services/auth.service';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 @Component({
@@ -8,43 +12,45 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
   templateUrl: './register-box.component.html',
   styleUrls: ['./register-box.component.scss']
 })
-export class RegisterBoxComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router, public toastr: ToastsManager, vcr: ViewContainerRef) { 
-    this.toastr.setRootViewContainerRef(vcr);    // Needed for toasts
-  }
-  ngOnInit() { };
 
-  onSubmit(form: any) {
-    if (form.username === '') {
-      this.toastr.info('Username is required!');
-    }
-    if (form.email === '') {
-      this.toastr.info('Email is required!');
-    }
-    if (form.password === '') {
-      this.toastr.info('Password is required!');
-    }
-    // @todo: Hash the password
-    this.authService.register(form.username, form.email, form.password)
-    .then(this.checkResponse.bind(this))
-    .catch(this.handleErrors.bind(this));
-     console.log(form);
+export class RegisterBoxComponent {
+  private registerForm: FormGroup;
+  constructor(private authService: AuthService,
+              private vcr: ViewContainerRef,
+              private fb: FormBuilder,
+              private router: Router,
+              public toastr: ToastsManager) {
+    this.toastr.setRootViewContainerRef(vcr);
+    this.registerForm = this.fb.group({
+      username: ['', Validators.required],
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
   };
 
-  checkResponse(res: any) {
-    console.log(res.status);
-    console.log(this);
-    if (res.status === 200) {
-      // We're good to go
-      this.router.navigateByUrl('/packages');
-    }
-  }
+  public onSubmit() {
+    const formModel = this.registerForm.value;
+    const form = this.registerForm;
 
-  handleErrors(res: any) {
-    const errors = JSON.parse(res._body).errors;
-    console.log(errors);
-    if (res.status === 400 && errors[0].title === 'User Already Exists') {
-      this.toastr.info('That username has already been taken :(');
+    if (this.registerForm.status === 'INVALID') {
+      if (this.registerForm.get('username').status === 'INVALID') {
+        this.toastr.error('Username is missing');
+      }
+      if (this.registerForm.get('email').status === 'INVALID') {
+        this.toastr.error('Email is missing');
+      }
+      if (this.registerForm.get('password').status === 'INVALID') {
+        this.toastr.error('Password is missing');
+      }
+    } else {
+      const user = new User(form.get('username').value, form.get('password').value, form.get('email').value);
+      this.authService.register(user)
+      .then((u: User) => {
+          this.router.navigateByUrl('/login');
+      })
+      .catch((res: Response) => {
+        this.toastr.error(res.json().errors[0].detail, null, {showCloseButton: true});
+      });
     }
-  }
+  };
 }

@@ -2,8 +2,8 @@
 FROM library/nginx:1.11.8-alpine
 
 # Maintainer
-MAINTAINER Coompiax (Pty) Ltd. <admin@compiax.io>
+MAINTAINER Compiax (Pty) Ltd. <admin@compiax.io>
 
 # Copy source
-COPY docker/nginx /etc/nginx/conf.d
-COPY dist /usr/share/nginx/html
+COPY docker-conf/nginx /etc/nginx/conf.d
+COPY distr /usr/share/nginx/html
