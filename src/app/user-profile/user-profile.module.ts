@@ -2,20 +2,20 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule }   from '@angular/forms';
 
-import { RegisterRoutingModule } from './register-routing.module'
-import { RegisterComponent } from './register.component';
-import { RegisterBoxComponent } from './register-box/register-box.component'
+import { UserProfileRoutingModule } from './user-profile-routing.module'
+import { UserProfileComponent } from './user-profile.component';
+//binimport { UserProfileBoxComponent } from './user-profile-box/user-profile-box.component'
 
 @NgModule({
   declarations: [
-      RegisterComponent,
-      RegisterBoxComponent
+      UserProfileComponent
+      //UserProfileBoxComponent
   ],
   imports: [
     CommonModule,
-    RegisterRoutingModule,
+    UserProfileRoutingModule,
     FormsModule
   ]
 })
 
-export default class RegisterModule { }
+export default class UserProfileModule { }
