@@ -20,27 +20,27 @@ export const routes: Routes = [
   {
     path: 'packages',
     loadChildren: 'app/browse-package/browse-package.module',
-    canActivate: [IsAuthenticatedGuard]
+    //canActivate: [IsAuthenticatedGuard]
   },
   {
     path: 'packages/:id',
     loadChildren: 'app/view-package/view-package.module',
-    canActivate: [IsAuthenticatedGuard]
+    //canActivate: [IsAuthenticatedGuard]
   },
   {
     path: 'projects/new',
     component: DesignspacePageComponent,
-    canActivate: [IsAuthenticatedGuard]
+    //canActivate: [IsAuthenticatedGuard]
   },
   {
     path: 'projects',
     loadChildren: 'app/browse-projects/browse-projects.module',
-    canActivate: [IsAuthenticatedGuard]
+    //canActivate: [IsAuthenticatedGuard]
   },
   {
     path: 'view-package',
     loadChildren: 'app/view-package/view-package.module',
-    canActivate: [IsAuthenticatedGuard]
+    //canActivate: [IsAuthenticatedGuard]
   },
   {
     path: 'user-profile',
