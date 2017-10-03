@@ -10,7 +10,7 @@ export class SessionService {
 
   executeSession(data: any) {
     const url = environment.api_url + '/session/execute';
-    return this.http.post(url, data, {headers: this.headers, withCredentials: true})
+    return this.http.post(url, {nodes: data}, {headers: this.headers, withCredentials: true})
     .toPromise()
     .then((res) => {
         return new Promise((resolve, reject) => {

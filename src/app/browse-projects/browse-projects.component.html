@@ -17,12 +17,13 @@
     <h3 class="card-header red darken-2 white-text">Projects</h3>
     <div class="card-body">
       <div class="list-group">
-        <a [routerLink]="['/projects', item.id]" class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let item of projects">
+        <div  class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let item of projects">
           <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ item.name }}</h5>
+            <h5 class="mb-1"><a [routerLink]="['/projects', item.id]">{{ item.name }}</a></h5>
+            <i style="cursor:pointer"class="fa fa-trash-o" (click)="deleteProject(item)"></i>
           </div>
           <p class="mb-1">{{ item.description }}</p>
-        </a>
+        </div>
       </div>
     </div>
   </div>

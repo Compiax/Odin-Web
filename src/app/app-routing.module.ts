@@ -28,7 +28,7 @@ export const routes: Routes = [
     canActivate: [IsAuthenticatedGuard]
   },
   {
-    path: 'projects/new',
+    path: 'projects/:id',
     component: DesignspacePageComponent,
     canActivate: [IsAuthenticatedGuard]
   },
