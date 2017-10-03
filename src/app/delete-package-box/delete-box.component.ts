@@ -1,6 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { ComponentsService } from '../_services/components.service';
 import { Component, OnInit} from '@angular/core';
+import * as $ from "jquery";
 
 @Component({
   selector: 'app-delete-package-box',
@@ -25,8 +26,10 @@ export class DeletePackageBoxComponent implements OnInit {
   }
 
   delete() {
-	  // to do 
-  }
+		// to do
+		$('#warning-modal').modal('hide');
+	}
+	
 
   loadComponents(id: String) {
     let self = this;
