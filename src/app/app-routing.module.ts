@@ -42,6 +42,11 @@ export const routes: Routes = [
     loadChildren: 'app/view-package/view-package.module',
     canActivate: [IsAuthenticatedGuard]
   },
+  {
+    path: 'user-profile',
+    loadChildren: 'app/user-profile/user-profile.module',
+    //canActivate: [IsAuthenticatedGuard]
+  },
 ];
 
 @NgModule({
