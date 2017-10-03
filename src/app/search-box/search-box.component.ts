@@ -1,12 +1,12 @@
 import { Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-info-box',
-  templateUrl: './info-box.component.html',
-  styleUrls: ['./info-box.component.scss'],
+  selector: 'app-search-box',
+  templateUrl: './search-box.component.html',
+  styleUrls: ['./search-box.component.scss'],
 })
 
-export class InfoBoxComponent implements OnInit {
+export class SearchBoxComponent implements OnInit {
   ngOnInit() {
   }
 }
