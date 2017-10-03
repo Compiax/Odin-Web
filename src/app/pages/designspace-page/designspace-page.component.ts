@@ -122,7 +122,6 @@ export class DesignspacePageComponent implements OnInit {
 
     node.edges.forEach(edge => {
       let line = edge.line;
-      console.log(edge);
       line.attr('x1', d3.select(edge.sourceCircle).attr('cx'));
       line.attr('y1', d3.select(edge.sourceCircle).attr('cy'));
       line.attr('x2', d3.select(edge.targetCircle).attr('cx'));
@@ -297,7 +296,6 @@ export class DesignspacePageComponent implements OnInit {
   }
 
   private executeSession() {
-    console.log(this.nodes);
     const newNodes = this.nodes.map((node) => {
       let resp:any = {
         id: node.id,
@@ -314,7 +312,6 @@ export class DesignspacePageComponent implements OnInit {
       return resp;
     });
     this.sessionService.executeSession(newNodes);
-    console.log(newNodes);
   }
 
   private loadComponents(): Promise<{}[]> {

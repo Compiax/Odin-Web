@@ -13,7 +13,6 @@ export class ComponentsService {
     .toPromise()
     .then((res) => {
       return new Promise((resolve, reject) => {
-        console.log(res);
         resolve(res);
       });
     });
@@ -25,7 +24,6 @@ export class ComponentsService {
     .toPromise()
     .then((res) => {
       return new Promise((resolve, reject) => {
-        console.log(res);
         resolve(res);
       });
     });

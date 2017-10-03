@@ -19,7 +19,6 @@ export class ViewPackageComponent implements OnInit {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      console.log('Fetching package with id ' + params['id']);
       this.loadComponents(params['id']);
    });
   }
@@ -29,15 +28,12 @@ export class ViewPackageComponent implements OnInit {
       this.componentsService.getComponent(id)
       .then((res: any) => {
         let data = JSON.parse(res._body).data[0];
-        console.log(data);
-        console.log(self.package);
         self.package.name = data.attributes.name;
         self.package.author = data.attributes.author.username;
         self.package.usage = data.attributes.usage;
         self.package.stats = data.attributes.stats;
         self.package.created = data.attributes.created;
         self.package.description = data.attributes.description;
-        console.log(self.package);
       });
     };
 }

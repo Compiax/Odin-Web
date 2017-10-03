@@ -34,9 +34,7 @@ export class BrowsePackageComponent {
               author: item.attributes.author.username
             };
           });
-          console.log(data);
           self.components = data;
-          console.log(self.components);
         });
       });
     }
