@@ -1,9 +1,5 @@
 import { AuthService } from '../auth.service';
-<<<<<<< HEAD
 import { environment } from '../../../environments/environment';
-=======
-import { environment } from 'environments/environment';
->>>>>>> 9405ea2b060621afed2cfbfc69ea4abc2edde016
 import 'rxjs/add/operator/toPromise';
 import { Headers, Http, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
