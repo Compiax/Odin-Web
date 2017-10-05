@@ -1,7 +1,22 @@
-#background{
-    background-color: rgba(0, 0, 0, 0.0);
+#container{
+    height: 100%;
+    width: 100%
 }
 
+#background{  
+    margin-top: 10vh;
+    height: 100vh;
+    background-image: url("../../resources/background.gif");
+    background-repeat: no-repeat;
+    z-index: 900;
+}
+
+#login{
+    position: absolute;
+    top: 50px;
+    z-index: 950;
+
+}
 
 div.row {
     height: 100%;
