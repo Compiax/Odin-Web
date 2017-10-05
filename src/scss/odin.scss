@@ -1,19 +1,21 @@
-body{
-    
+body {
+  background-image: url("./resources/background.gif");
+  background-repeat: no-repeat;
+  
 }
 
 .brand-color {
-	background-color: $brand-primary;
+  background-color: $brand-primary;
 }
 
 .brand-dark {
-    background-color: $brand-dark;
-}	
-
-.brand-color-text {
-    color: $brand-primary;
+  background-color: $brand-dark;
 }
 
-#background{
-    background-color: #e0e0e0
+.brand-color-text {
+  color: $brand-primary;
+}
+
+#background {
+  background-color: #e0e0e0
 }
