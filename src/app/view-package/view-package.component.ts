@@ -13,7 +13,7 @@ export class ViewPackageComponent implements OnInit {
     private id: String;
     private sub: any;
 
-    constructor(private componentsService: ComponentsService, private route: ActivatedRoute) { 
+    constructor(private componentsService: ComponentsService, private route: ActivatedRoute) {
       this.package = {};
     }
 

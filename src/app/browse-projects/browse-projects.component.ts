@@ -1,3 +1,4 @@
+import { Project } from './../_models/project.model';
 import { ProjectsService } from '../_services/projects.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BrowseProjectsComponent implements OnInit {
 
-  private projects: any[];
+  private projects: Project[];
   constructor(private projectsService: ProjectsService) { }
 
   ngOnInit() {
@@ -15,26 +16,17 @@ export class BrowseProjectsComponent implements OnInit {
   }
 
   loadProjects() {
-    let self = this;
-    return this.projectsService.getProjects()
-    .then(function(res: any) {
-      return new Promise<{}[]>((resolve, reject) => {
-        let data: {}[];
-        if (JSON.parse(res._body).data === undefined) {
-          // There are no projects
-          return [];
-        };
-        data = JSON.parse(res._body).data.map((item) => {
-          return {
-            id: item.id,
-            description: item.attributes.description,
-            name: item.attributes.name,
-            created: item.attributes.created
-          };
-        });
-        self.projects = data;
+    this.projectsService.getProjects()
+      .then((projects: Project[]) => {
+          console.log(projects);
+          this.projects = projects;
       });
-    });
+  }
+
+  private deleteProject(project: Project) {
+    console.log(project);
+    this.projectsService.deleteProject(project);
+    this.loadProjects();
   }
 
 }
