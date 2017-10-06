@@ -14,6 +14,7 @@ import { RouterModule} from '@angular/router';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from './_services/auth.service';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { AuthService } from './_services/auth.service';
     BrowserModule,
     CoreModule,
     HttpModule,
+    BrowserAnimationsModule,
     ToastModule.forRoot(),
     ReactiveFormsModule,
     FormsModule

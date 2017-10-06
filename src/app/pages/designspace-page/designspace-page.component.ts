@@ -5,7 +5,7 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { Response } from '@angular/http';
 import { SessionService } from '../../_services/session.service';
 import { ComponentsService } from '../../_services/components.service';
-import { Component, OnInit, ViewContainerRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import * as d3 from 'd3-selection';
 import * as d3Drag from 'd3-drag';
 import { UUID } from 'angular2-uuid';
@@ -16,11 +16,12 @@ let saveProject = null;
   templateUrl: './designspace-page.component.html',
   styleUrls: ['./designspace-page.component.scss']
 })
-export class DesignspacePageComponent implements OnInit, AfterViewInit {
+export class DesignspacePageComponent implements OnInit {
   private svg: any;
   public width = 900;
   public height = 500;
   public components: any[] = [];
+  public results: number[][];
   project: Project;
 
   // Graph variables
@@ -41,19 +42,13 @@ export class DesignspacePageComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.initSvg();
     this.loadComponents();
-  //   this.route.params.subscribe(params => {
-  //     this.loadProject(params['id']);
-  //  });
-  }
-
-  ngAfterViewInit() {
     this.route.params.subscribe(params => {
       this.loadProject(params['id']);
-   });
+    });
   }
 
   private loadProject(id: String) {
-    console.log("Calling loadProject()")
+    console.log('Calling loadProject()')
     if (id === 'new') {
       this.project = new Project('Untitled Project', '');
       this.projectsService.createProject(this.project)
@@ -61,10 +56,10 @@ export class DesignspacePageComponent implements OnInit, AfterViewInit {
           this.project = project;
         });
     } else {
-      console.log("Loading existing project")
+      console.log('Loading existing project')
       this.projectsService.getProject(id)
         .then(project => {
-          console.log("Received response")
+          console.log('Received response');
           this.project = project;
           // console.log(this.project)
           const nodes = JSON.parse(project.data);
@@ -89,15 +84,16 @@ export class DesignspacePageComponent implements OnInit, AfterViewInit {
   click(event: MouseEvent) { }
 
   addNode(componentName: string, authorName: string, coords?: { x: number, y: number}) {
+    console.log(`${componentName} ${authorName} ${coords}`);
     if (coords == null) {
-      coords = { x: this.width / 2 + 100, y: this.width / 2 + 100}
+      coords = { x: this.width / 2 - 100, y: this.height/2 - 80 / 2};
     }
     let node: any;
     node = {};
     node.id = 'node-' + UUID.UUID();
     node.group = d3.select('#mainsvg').append('g').attr('id', node.id);
     node.edges = { inputs: [], outputs: [] };
-    node.coords = { x: this.width / 2 - 200 / 2, y: this.height / 2 - 80 / 2};
+    node.coords = { x: coords.x, y: coords.y};
 
     node.outCircle =
     node.group.append('circle')
