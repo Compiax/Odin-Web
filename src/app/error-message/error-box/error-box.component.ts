@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-error-box',
@@ -9,10 +9,10 @@ import { Component, OnInit } from '@angular/core';
 
 export class ErrorBoxComponent implements OnInit {
 
-  errorcode = 404;
-  message = "Sorry, we couldn't find that page.";
+  @Input() errorcode: string;
+  @Input() message: string;
 
-  constructor( ) {
+  constructor() {
 
   }
 
