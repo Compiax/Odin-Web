@@ -9,7 +9,10 @@ import { Component, OnInit } from '@angular/core';
 
 export class ErrorBoxComponent implements OnInit {
 
-  constructor(public errorNumber: number, public message: string) {
+  errorcode = 404;
+  message = "Sorry, we couldn't find that page.";
+
+  constructor( ) {
 
   }
 
