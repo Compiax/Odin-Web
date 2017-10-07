@@ -48,8 +48,13 @@ export const routes: Routes = [
     //canActivate: [IsAuthenticatedGuard]
   },
   {
-    path: 'error',
+    path: '404',
     loadChildren: 'app/error-message/error-404/error-404.module',
+    //canActivate: [IsAuthenticatedGuard]
+  },
+  {
+    path: '500',
+    loadChildren: 'app/error-message/error-500/error-500.module',
     //canActivate: [IsAuthenticatedGuard]
   },
 ];
