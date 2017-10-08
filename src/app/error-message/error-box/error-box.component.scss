@@ -1,0 +1,79 @@
+#background{
+    height: 1000px;
+    width: 100%;
+    background-color: #d32f2f;
+}
+
+#box{
+    position: absolute;
+    top: 20vh;
+    left: 32.5%;
+    height: 40vh;
+    width: 35%;
+    border-radius: 10px;
+    background-color: #fff;
+    text-align: center;
+}
+
+#errorcode{
+    margin-top: 120px;
+    font-size: 13vh;
+    color: #47525E;
+    font-weight: bold;
+}
+
+#explanation{
+    color: #47525E;    
+}
+
+#red-line{
+    position: absolute;
+    top: 4vh;
+    height: 10px;
+    width: 100%;
+    background-color: #d32f2f;    
+}
+
+#top-bar{
+    position: absolute;
+    height: 4vh;
+    width: 100%;
+    border-radius: 10px 10px 0px 0px;    
+    background-color: #fff;    
+}
+
+.circle{
+    position: absolute;
+    top: 30%;
+    height: 15px;
+    width: 15px;
+    border-radius: 20px 20px 20px 20px;
+}
+
+#closebutton{
+    position: absolute;
+    left: 15px;
+    background-color: #d32f2f;    
+}
+
+#genericButton1{
+    position: absolute;
+    left: 40px;
+    background-color: #9F9E9A;    
+}
+
+#genericButton2{
+    position: absolute;
+    left: 65px;
+    background-color: #9F9E9A;    
+}
+
+
+#searchbar{
+    position: absolute;
+    top: 1vh;
+    right: 10px;
+    height: 20px;
+    width: 80%;
+    background-color: #d32f2f;    
+}

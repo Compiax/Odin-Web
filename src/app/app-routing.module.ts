@@ -47,6 +47,11 @@ export const routes: Routes = [
     loadChildren: 'app/user-profile/user-profile.module',
     //canActivate: [IsAuthenticatedGuard]
   },
+  {
+    path: 'error',
+    loadChildren: 'app/error-message/error-404/error-404.module',
+    //canActivate: [IsAuthenticatedGuard]
+  },
 ];
 
 @NgModule({
