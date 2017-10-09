@@ -25,8 +25,10 @@ export class BrowseProjectsComponent implements OnInit {
 
   private deleteProject(project: Project) {
     console.log(project);
-    this.projectsService.deleteProject(project);
-    this.loadProjects();
+    this.projectsService.deleteProject(project)
+    .then(() => {
+      this.loadProjects();
+    })
   }
 
 }

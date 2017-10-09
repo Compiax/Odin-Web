@@ -63,13 +63,13 @@ export class DesignspacePageComponent implements OnInit {
           this.project = project;
           // console.log(this.project)
           const nodes = JSON.parse(project.data);
-          // console.log(nodes)
+          // console.log(nodes)1
           nodes.forEach(node => {
             // console.log(node);
             if (node.componentName === 'Input') {
-              this.addInput();
+              this.addInput(node.coords);
             } else if (node.componentName === 'Output') {
-              this.addOutput();
+              this.addOutput(node.coords);
             } else {
               console.log(`Adding ${node.componentName}`);
               this.addNode(node.componentName, 'Math', node.coords);
@@ -84,7 +84,6 @@ export class DesignspacePageComponent implements OnInit {
   click(event: MouseEvent) { }
 
   addNode(componentName: string, authorName: string, coords?: { x: number, y: number}) {
-    console.log(`${componentName} ${authorName} ${coords}`);
     if (coords == null) {
       coords = { x: this.width / 2 - 100, y: this.height/2 - 80 / 2};
     }
@@ -165,6 +164,7 @@ export class DesignspacePageComponent implements OnInit {
     this.outCircle.attr('cy', y + 40);
     this.text.attr('x', x + 100);
     this.text.attr('y', y + 20);
+    this.coords = { x: x, y: y };
   };
 
   startDrag(d) {
@@ -177,7 +177,7 @@ export class DesignspacePageComponent implements OnInit {
 
     const node = d3.select(this).datum().node;
     node.update(x, y);
-    node.coords = { x: x, y: y };
+    
 
     node.edges.inputs.forEach(edge => {
       const line = edge.line;
@@ -256,19 +256,23 @@ export class DesignspacePageComponent implements OnInit {
                  .append('g');
   }
 
-  private addOutput() {
+  private addOutput(coords?: { x: number, y: number}) {
+    if (coords == null) {
+      coords = { x: this.width / 2 - 100, y: this.height/2 - 80 / 2};
+    }
+
     let node: any;
     node = {};
     node.id = 'output-' + UUID.UUID();
     node.group = d3.select('#mainsvg').append('g').attr('id', node.id);
     node.edges = { inputs: [], outputs: []};
-    node.coords = { x: this.width / 2 - 200 / 2, y: this.width / 2 - 200 / 2};
+    node.coords = coords;
 
     node.inCircle =
     node.group.append('circle')
       .attr('r', 5)
-      .attr('cx', this.width / 2 - 132)
-      .attr('cy', this.height / 2 - 40)
+      .attr('cx', coords.x - 32)
+      .attr('cy', coords.y)
       .attr('fill', 'grey')
       .call(d3Drag.drag()
       .on('start', this.startEdgeDrag)
@@ -277,8 +281,8 @@ export class DesignspacePageComponent implements OnInit {
       .datum({node: node, type: 'input'});
     node.mainCircle =
     node.group.append('circle')
-      .attr('cx', this.width / 2 - 200 / 2)
-      .attr('cy', this.height / 2 - 80 / 2)
+      .attr('cx', coords.x)
+      .attr('cy', coords.y)
       .attr('r', 30)
       .attr('fill', '#EEEEEE')
       .attr('stroke-width', '5px')
@@ -289,8 +293,8 @@ export class DesignspacePageComponent implements OnInit {
     .attr('text-anchor', 'middle')
     .text('OUT')
     .style('fill', '#D32F2F')
-    .attr('x', this.width / 2 - 100)
-    .attr('y', this.height / 2 - 34);
+    .attr('x', coords.x)
+    .attr('y', coords.y + 5);
     node.group.call(d3Drag.drag()
       .on('start', this.startDrag)
       .on('drag', this.drag)
@@ -303,6 +307,7 @@ export class DesignspacePageComponent implements OnInit {
     node.update = function() {
       const x = d3.event.x;
       const y = d3.event.y;
+      this.coords = { x: x, y: y };
       this.mainCircle.attr('cx', x);
       this.mainCircle.attr('cy', y);
       this.inCircle.attr('cx', x - 32);
@@ -312,19 +317,23 @@ export class DesignspacePageComponent implements OnInit {
     };
   }
 
-  private addInput() {
+  private addInput(coords?: { x: number, y: number}) {
+    if (coords == null) {
+      coords = { x: this.width / 2 - 100, y: this.height/2 - 80 / 2};
+    }
+
     let node: any;
     node = {};
     node.id = 'input-' + UUID.UUID();
     node.group = d3.select('#mainsvg').append('g').attr('id', node.id);
     node.edges = { inputs: [], outputs: []};
-    node.coords = { x: this.width / 2 - 200 / 2, y: this.width / 2 - 200 / 2};
+    node.coords = coords;
 
     node.inCircle =
     node.group.append('circle')
       .attr('r', 5)
-      .attr('cx', this.width / 2 - 68)
-      .attr('cy', this.height / 2 - 40)
+      .attr('cx', coords.x + 32)
+      .attr('cy', coords.y)
       .attr('fill', 'grey')
       .call(d3Drag.drag()
       .on('start', this.startEdgeDrag)
@@ -333,8 +342,8 @@ export class DesignspacePageComponent implements OnInit {
       .datum({node: node, type: 'output'});
     node.mainCircle =
     node.group.append('circle')
-      .attr('cx', this.width / 2 - 200 / 2)
-      .attr('cy', this.height / 2 - 80 / 2)
+      .attr('cx', coords.x)
+      .attr('cy', coords.y)
       .attr('r', 30)
       .attr('fill', '#EEEEEE')
       .attr('stroke-width', '5px')
@@ -345,8 +354,8 @@ export class DesignspacePageComponent implements OnInit {
     .attr('text-anchor', 'middle')
     .text('IN')
     .style('fill', '#D32F2F')
-    .attr('x', this.width / 2 - 100)
-    .attr('y', this.height / 2 - 34);
+    .attr('x', coords.x)
+    .attr('y', coords.y + 5);
     node.group.call(d3Drag.drag()
       .on('start', this.startDrag)
       .on('drag', this.drag)
@@ -361,6 +370,7 @@ export class DesignspacePageComponent implements OnInit {
     node.update = function() {
       const x = d3.event.x;
       const y = d3.event.y;
+      this.coords = { x: x, y: y };
       this.mainCircle.attr('cx', x);
       this.mainCircle.attr('cy', y);
       this.inCircle.attr('cx', x + 32);
