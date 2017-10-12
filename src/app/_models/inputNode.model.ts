@@ -11,8 +11,8 @@ export class InputNode extends Node {
         author: 'Base'
     };
 
-    public values: number[];
-    public dimensions: number[];
+    public values: any;
+    public dimensions: any;
 
     public updatePosition(x, y) {
         super.updatePosition(x, y);
@@ -28,6 +28,12 @@ export class InputNode extends Node {
     public toJSON() {
         const json = super.toJSON();
         json.type = 'Input';
+        if (typeof this.values === 'string') {
+            this.values = this.values.split(',').map(i => parseInt(i, 10));
+        }
+        if (typeof this.dimensions === 'string') {
+            this.dimensions = this.dimensions.split(',').map(i => parseInt(i, 10));
+        }
         json.variable = {
             values: this.values,
             dimensions: this.dimensions
