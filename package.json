@@ -30,6 +30,7 @@
     "@angular/platform-browser-dynamic": "^4.3.5",
     "@angular/platform-server": "^4.3.5",
     "@angular/router": "^4.3.5",
+    "angular-particle": "^1.0.4",
     "angular2-uuid": "^1.1.1",
     "core-js": "^2.4.1",
     "d3": "^4.10.0",
