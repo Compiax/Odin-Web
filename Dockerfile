@@ -5,5 +5,5 @@ FROM library/nginx:1.11.8-alpine
 MAINTAINER Compiax (Pty) Ltd. <admin@compiax.io>
 
 # Copy source
-COPY docker-conf/nginx /etc/nginx/conf.d
-COPY distr /usr/share/nginx/html
+COPY ./docker/nginx /etc/nginx/conf.d
+COPY ./dist /usr/share/nginx/html
