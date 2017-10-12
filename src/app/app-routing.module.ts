@@ -20,27 +20,42 @@ export const routes: Routes = [
   {
     path: 'packages',
     loadChildren: 'app/browse-package/browse-package.module',
-    canActivate: [IsAuthenticatedGuard]
+    //canActivate: [IsAuthenticatedGuard]
   },
   {
     path: 'packages/:id',
     loadChildren: 'app/view-package/view-package.module',
-    canActivate: [IsAuthenticatedGuard]
+    //canActivate: [IsAuthenticatedGuard]
   },
   {
-    path: 'projects/new',
+    path: 'projects/:id',
     component: DesignspacePageComponent,
-    canActivate: [IsAuthenticatedGuard]
+    //canActivate: [IsAuthenticatedGuard]
   },
   {
     path: 'projects',
     loadChildren: 'app/browse-projects/browse-projects.module',
-    canActivate: [IsAuthenticatedGuard]
+    //canActivate: [IsAuthenticatedGuard]
   },
   {
     path: 'view-package',
     loadChildren: 'app/view-package/view-package.module',
-    canActivate: [IsAuthenticatedGuard]
+    //canActivate: [IsAuthenticatedGuard]
+  },
+  {
+    path: 'user-profile',
+    loadChildren: 'app/user-profile/user-profile.module',
+    //canActivate: [IsAuthenticatedGuard]
+  },
+  {
+    path: '404',
+    loadChildren: 'app/error-message/error-404/error-404.module',
+    //canActivate: [IsAuthenticatedGuard]
+  },
+  {
+    path: '500',
+    loadChildren: 'app/error-message/error-500/error-500.module',
+    //canActivate: [IsAuthenticatedGuard]
   },
 ];
 

@@ -1,32 +1,38 @@
-import { Http } from '@angular/http';
-import { environment } from '../../environments/environment';
+import { ComponentModel } from './../_models/component.model';
+import { Http, Response } from '@angular/http';
+import { environment } from 'environments/environment';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ComponentsService {
-  private headers = new Headers({'Content-Type': 'application/X-www-form-urlencoded'});
   constructor(private http: Http) { }
 
   getComponents() {
     const url = environment.api_url + '/components/';
     return this.http.get(url, {withCredentials: true})
     .toPromise()
-    .then((res) => {
-      return new Promise((resolve, reject) => {
-        console.log(res);
-        resolve(res);
+    .then((res: Response) => {
+      return new Promise<ComponentModel[]>((resolve, reject) => {
+        if (res.json() && res.json().data) {
+          const components = [];
+          res.json().data.forEach(c => {
+            components.push(new ComponentModel(c));
+          });
+          resolve(components);
+        }
       });
     });
   }
 
-  getComponent(id: String): Promise<{}> {
+  getComponent(id: String): Promise<ComponentModel> {
     const url = environment.api_url + '/components/' + id;
     return this.http.get(url, {withCredentials: true})
     .toPromise()
-    .then((res) => {
-      return new Promise((resolve, reject) => {
-        console.log(res);
-        resolve(res);
+    .then((res: Response) => {
+      return new Promise<ComponentModel>((resolve, reject) => {
+        if (res.json() && res.json().data) {
+          resolve(new ComponentModel(res.json().data[0]));
+        }
       });
     });
   }

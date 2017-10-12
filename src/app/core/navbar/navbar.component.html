@@ -1,7 +1,7 @@
 <nav class="mb-1 navbar navbar-toggleable-md navbar-dark bg-unique red darken-2" *ngIf="show">
     <div class="container">
         <div class="mr-auto">
-            <a class="navbar-brand" href="/" routerLink="/" routerLinkActive="active">
+            <a class="navbar-brand" routerLink="/">
                 ODIN
             </a>               
         </div>
@@ -9,22 +9,21 @@
         <ul class="nav navbar-nav navbar-right nav-flex-icons ml-auto">
 
             <li class="nav-item">
-                <a class="nav-link" href="/projects" routerLink="/projects" routerLinkActive="active"><span class="clearfix d-none d-sm-inline-block">Projects</span></a>
+                <a class="nav-link" routerLink="/projects"><span class="clearfix d-none d-sm-inline-block">Projects</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/projects/new" routerLink="/projects/new" routerLinkActive="active"><span class="clearfix d-none d-sm-inline-block">New Project</span></a>
+                <a class="nav-link" routerLink="/projects/new"><span class="clearfix d-none d-sm-inline-block">New Project</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/packages" routerLink="/packages" routerLinkActive="active"><span class="clearfix d-none d-sm-inline-block">Packages</span></a>
+                <a class="nav-link" routerLink="/packages"><span class="clearfix d-none d-sm-inline-block">Packages</span></a>
             <!-- </li>
             <li class="nav-item">
-                <a class="nav-link" href="/documentation" routerLink="/documentation" routerLinkActive="active"><span class="clearfix d-none d-sm-inline-block">Documentation</span></a>
+                <a class="nav-link" href="/documentation" routerLink="/documentation"><span class="clearfix d-none d-sm-inline-block">Documentation</span></a>
             </li> -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle"></i> <strong>{{ username }}</strong></a>
                 <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">Profile</a>
-                    <a class="dropdown-item" href="#">Settings</a>
+                    <a class="dropdown-item" routerLink="/user-profile">Profile</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item"
                         (click)="logOut()"

@@ -1,6 +1,6 @@
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentsService } from '../_services/components.service';
-import { Component } from '@angular/core';
+import { ComponentModel } from '../_models/component.model';
 
 
 @Component({
@@ -8,36 +8,16 @@ import { Component } from '@angular/core';
   templateUrl: './browse-package.component.html'
 })
 export class BrowsePackageComponent {
-    private components: {}[];
+    components: ComponentModel[];
 
     constructor(private componentsService: ComponentsService) { 
       this.loadComponents();
     }
 
-    loadComponents(): Promise<{}[]> {
-      let self = this;
+    loadComponents() {
       return this.componentsService.getComponents()
-      .then(function(res: any) {
-        return new Promise<{}[]>((resolve, reject) => {
-          let data: {}[];
-          if (JSON.parse(res._body).data === undefined) {
-            // There are no projects
-            return [];
-          };
-          data = JSON.parse(res._body).data.map((item) => {
-            return {
-              id: item.id,
-              description: item.attributes.description,
-              name: item.attributes.name,
-              stats: item.attributes.stats,
-              usage: item.attributes.usage,
-              author: item.attributes.author.username
-            };
-          });
-          console.log(data);
-          self.components = data;
-          console.log(self.components);
+        .then((components: ComponentModel[]) => {
+          this.components = components;
         });
-      });
     }
 }

@@ -1,24 +1,105 @@
-<div class="row">
-    <div class="col-xl-2 p-0 px-2 mt-3">
-        <div class="card-body components ml-4">
-            <div class="card-header red darken-2 white-text">Control</div>
-            <a (click)="addInput()" class="list-group-item"><i class="fa fa-pencil-square-o mr-2"></i>Input</a>
-            <a (click)="addOutput()" class="list-group-item"><i class="fa fa-sign-out mr-2"></i>Output</a>
-            <a (click)="executeSession()" class="list-group-item"><i class="fa fa-play mr-2"></i>Execute</a>
-        </div>
-        <div class="card-body components ml-4 mt-3">
-            <div class="card-header red darken-2 white-text">Components</div>
-            <a (click)="addNode('Add', 'Math')" class="list-group-item"><i class="fa fa-calculator mr-2"></i><span class='text-muted'>Math</span>/Add</a>
-            <a (click)="addNode('Subtract', 'Math')" class="list-group-item"><i class="fa fa-calculator mr-2"></i><span class='text-muted'>Math</span>/Subtract</a>
-            <a (click)="addNode('Multiply', 'Math')" class="list-group-item"><i class="fa fa-calculator mr-2"></i><span class='text-muted'>Math</span>/Multiply</a>
-            <a (click)="addNode('Divide', 'Math')" class="list-group-item"><i class="fa fa-calculator mr-2"></i><span class='text-muted'>Math</span>/Divide</a>
-            <a *ngFor="let item of components" (click)="addNode(item.name, item.author)" class="list-group-item"><i class="fa fa-cube mr-2"></i><span class='text-muted'>{{ item.author }}</span>/{{ item.name }}</a>
+<br>
+<div class="container">
+    <div class="row">
+        <h1>{{ project?.name }}</h1><i class="fa fa-pencil fa-lg my-3 mx-2 edit-icon" data-toggle="modal" data-target="#nameModal"></i><i class="edit-icon fa fa-play mx-2 fa-lg my-3" (click)="executeSession()"></i><i class="edit-icon fa fa-share-square-o mx-2 fa-lg my-3" (click)="exportProject()"></i>
+    </div>
+</div>
+<svg class="grey lighten-3 m-0 p-0" #svgElement>
+    <g id="mainsvg">
+        <line id="edgepath" x1="0" y1="0" x2="0" y2="0" class="fakeEdge"/>
+    </g>
+</svg>
+
+<div class="fixed-action-btn add-component-button">
+    <a class="btn-floating btn-lg red px-2">
+        <i class="fa fa-caret-right" data-toggle="modal" data-target="#componentsModal"></i>
+    </a>
+</div>
+                                        
+
+<div *ngIf="project">
+    <div class="modal fade" id="nameModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title w-100" id="myModalLabel">Project Title</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" [(ngModel)]="project.name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn brand-color " data-dismiss="modal" (click)="saveProject()">Save changes</button>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-xl-9 ml-4 p-0 mt-3">
-        <svg id="mainsvg" class="grey lighten-3" #svgElement
-        (click)="click($event)">
-            <line id="edgepath" x1="0" y1="0" x2="0" y2="0" class="fakeEdge"/>
-        </svg>
+    <div class="modal fade" id="valueModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title w-100" id="myModalLabel">Input Value</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" *ngIf="currentInputNode">
+                    <label for="values-input">Values</label>
+                    <input id ="values-input" class="form-control" type="text" [(ngModel)]="currentInputNode.values">
+                    <label for="dimensions-input">Dimensions</label>
+                    <input id ="dimensions-input" class="form-control" type="text" [(ngModel)]="currentInputNode.dimensions">
+                </div>
+                <div class="modal-body" *ngIf="currentInputNode">
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn brand-color " data-dismiss="modal" (click)="saveProject()">Done</button>
+                </div>
+            </div>
+        </div>
     </div>
+    <div *ngIf="components" class="modal fade left" id="componentsModal" tabindex="-1">
+        <div class="modal-dialog modal-full-height modal-left">
+            <div class="modal-content">                   
+                <div class="list-group z-depth-0">
+                    <a href="#" class="list-group-item active">Base</a>
+                    <a (click)="addInput(); saveProject()" class="list-group-item"><i class="fa fa-pencil-square-o mr-2"></i>Input</a>
+                    <a (click)="addOutput(); saveProject()" class="list-group-item"><i class="fa fa-sign-out mr-2"></i>Output</a>
+                    <a (click)="executeSession()" class="list-group-item"><i class="fa fa-play mr-2"></i>Execute</a>
+                    <a href="#" class="list-group-item active">Components</a>
+                    <a *ngFor="let component of components" (click)="addNode(component); saveProject()" class="list-group-item"><i class="fa fa-calculator mr-2"></i><span class='text-muted'>{{ component.name }}</span>/{{ component.author.username }}</a>
+                </div>                                 
+            </div>
+        </div>
+    </div>
+    <context-menu #deleteMenu>
+        <ng-template contextMenuItem let-item (execute)="deleteNode($event.item)">
+            Delete
+        </ng-template>
+    </context-menu>
+
+    <context-menu #componentMenu>
+            <ng-template contextMenuItem let-item (execute)="deleteNode($event.item)">
+                Delete
+            </ng-template>
+            <ng-template contextMenuItem let-item (execute)="componentDetails($event.item)">
+                Component Details
+            </ng-template>
+        </context-menu>
+          
+    <context-menu #deleteEdgeMenu>
+        <ng-template contextMenuItem let-item (execute)="$event.item.remove()">
+            Delete
+        </ng-template>
+    </context-menu>
+    
+    <context-menu #inputMenu>
+        <ng-template contextMenuItem let-item (execute)="deleteNode($event.item)">
+            Delete
+        </ng-template>
+        <ng-template contextMenuItem let-item (execute)="setValues($event.item)">
+            Set Values
+        </ng-template>
+    </context-menu>
 </div>

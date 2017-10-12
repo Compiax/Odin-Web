@@ -1,344 +1,406 @@
+import { Edge } from './../../_models/edge.model';
+import { InputNode } from './../../_models/inputNode.model';
+import { OutputNode } from './../../_models/outputNode.model';
+import { Node } from './../../_models/node.model';
+import { ComponentNode } from './../../_models/componentNode.model';
+import { ComponentModel } from './../../_models/component.model';
+import { ProjectsService } from './../../_services/projects.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Project } from './../../_models/project.model';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { Response } from '@angular/http';
 import { SessionService } from '../../_services/session.service';
 import { ComponentsService } from '../../_services/components.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
 import * as d3 from 'd3-selection';
 import * as d3Drag from 'd3-drag';
+import * as d3Zoom from 'd3-zoom';
 import { UUID } from 'angular2-uuid';
+import { ContextMenuService, ContextMenuComponent } from 'ngx-contextmenu';
+
+let saveProject = null;
+let self = null;
+declare var $;
 
 @Component({
   selector: 'app-designspace-page',
   templateUrl: './designspace-page.component.html',
   styleUrls: ['./designspace-page.component.scss']
 })
-
 export class DesignspacePageComponent implements OnInit {
+  @ViewChild('deleteMenu') public deleteMenu: ContextMenuComponent;
+  @ViewChild('inputMenu') public inputMenu: ContextMenuComponent;
+  @ViewChild('deleteEdgeMenu') public deleteEdgeMenu: ContextMenuComponent;
+  @ViewChild('componentMenu') public componentMenu: ContextMenuComponent;
+
   private svg: any;
-  public width = 900;
-  public height = 500;
-  public components: any[] = [];
+  private width = 900;
+  private height = 500;
+  public components: ComponentModel[] = [];
+  public currentInputNode: any = null;
+  public project: Project;
+  private nodes: Node[] = [];
 
-  // Graph variables
-  private nodes: any[] = [];
-  private edges: {}[] = [];
-
-  constructor(private componentsService: ComponentsService, private sessionService: SessionService) { }
+  constructor(private componentsService: ComponentsService,
+              private sessionService: SessionService,
+              private vcr: ViewContainerRef,
+              public toastr: ToastsManager,
+              public route: ActivatedRoute,
+              private projectsService: ProjectsService,
+              private contextMenuService: ContextMenuService,
+              private router: Router
+  ) {
+    this.toastr.setRootViewContainerRef(vcr);
+    saveProject = this.saveProject.bind(this);
+    self = this;
+  }
 
   ngOnInit() {
-    this.initSvg();
+    // Get initial SVG
+    this.svg = d3.select('#mainsvg');
+
+    // Set zoom action
+    d3.select('svg').call(d3Zoom.zoom().on('zoom', () => {
+      self.contextMenuService.destroyLeafMenu();
+      self.svg.attr('transform', d3.event.transform);
+    }));
+
+    // Load components
     this.loadComponents();
-  }
 
-  click(event: MouseEvent) { }
-
-  addNode(componentName: string, authorName: string) {
-    let node:any;
-    node = {};
-    node.id = 'node-' + UUID.UUID();
-    node.group = d3.select('#mainsvg').append('g').attr('id', node.id);
-    node.edges = [];
-
-    node.outCircle =
-    node.group.append('circle')
-      .attr('r', 5)
-      .attr('cx', this.width/2 + 100)
-      .attr('cy', this.height/2 - 5/2)
-      .attr('fill','grey')
-      .call(d3Drag.drag()
-      .on('start', this.startEdgeDrag)
-      .on('drag', this.dragEdge)
-      .on('end', this.endEdgeDrag))
-      .datum({node: node});
-    node.inCircle =
-    node.group.append('circle')
-      .attr('r', 5)
-      .attr('cx', this.width/2 - 100)
-      .attr('cy', this.height/2 - 5/2)
-      .attr('fill', 'grey')
-      .call(d3Drag.drag()
-      .on('start', this.startEdgeDrag)
-      .on('drag', this.dragEdge)
-      .on('end', this.endEdgeDrag))
-      .datum({node: node});
-    node.mainRect =
-    node.group.append('rect')
-      .attr('x', this.width/2 - 200 / 2)
-      .attr('y', this.height/2 - 80 / 2)
-      .attr('width', 200)
-      .attr('height', 80)
-      .attr('fill', 'white')
-      .attr('stroke-width', '1px')
-      .attr('stroke', 'grey')
-      .datum({node: node});
-    node.headerRect =
-    node.group.append('rect')
-      .attr('x', this.width/2 - 200/2)
-      .attr('y', this.height/2 - 80/2)
-      .attr('width', 200)
-      .attr('height', 30)
-      .attr('fill','#D32F2F')
-      .datum({node: node});
-    node.group.call(d3Drag.drag()
-      .on('start', this.startDrag)
-      .on('drag', this.drag)
-      .on('end', this.endDrag));
-      this.nodes.push(node);
-    node.text =
-    node.group.append('text')
-      .attr('text-anchor', 'middle')
-      .text(componentName)
-      .style('fill','white')
-      .attr('x', this.width/2)
-      .attr('y', this.height/2 - 20);
-    node.componentName = componentName;
-    node.authorName = authorName;
-    node.group.datum({node: node});
-
-    node.update = this.updateNode;
-  }
-
-  updateNode = function(x: number, y: number) {
-    this.mainRect.attr('x', x);
-    this.mainRect.attr('y', y);
-    this.headerRect.attr('x', x);
-    this.headerRect.attr('y', y);
-    this.inCircle.attr('cx', x);
-    this.inCircle.attr('cy', y + 40);
-    this.outCircle.attr('cx', x + 200);
-    this.outCircle.attr('cy', y + 40);
-    this.text.attr('x', x + 100);
-    this.text.attr('y', y + 20);
-  }
-
-  startDrag(d) {
-  }
-
-  drag() {
-    const self: any = this;
-    const x = d3.event.x - 200 / 2;
-    const y = d3.event.y - 80 / 2;
-
-    let node = d3.select(this).datum().node;
-    node.update(x, y);
-
-    node.edges.forEach(edge => {
-      let line = edge.line;
-      console.log(edge);
-      line.attr('x1', d3.select(edge.sourceCircle).attr('cx'));
-      line.attr('y1', d3.select(edge.sourceCircle).attr('cy'));
-      line.attr('x2', d3.select(edge.targetCircle).attr('cx'));
-      line.attr('y2', d3.select(edge.targetCircle).attr('cy'));
+    // Get ID of project and load it
+    this.route.params.subscribe(params => {
+      this.loadProject(params['id']);
     });
   }
 
-  endDrag(d) {
+  /**
+   * Loads the project from the API
+   */
+  private loadProject(id: String) {
+    this.nodes.forEach(n => this.deleteNode(n));
+    if (id === 'new') {
+      this.project = new Project('Untitled Project', '');
+      this.projectsService.createProject(this.project)
+        .then(project => {
+          this.project = project;
+          this.router.navigateByUrl('/projects/' + project.id);
+        });
+    } else {
+      this.projectsService.getProject(id)
+        .then(project => {
+          this.project = project;
+          if (project.data) {
+            const nodes = JSON.parse(project.data);
+            nodes.forEach(node => {
+              if (node.type === 'Input') {
+                this.addInput(node.coords, node.id);
+              } else if (node.type === 'Output') {
+                this.addOutput(node.coords, node.id);
+              } else {
+                this.addNode(node.component, node.coords, node.id);
+              }
+            });
+            nodes.forEach(node => {
+              node.parents.forEach(edge => {
+                this.addEdge(this.getNode(edge).outCircle._groups[0][0], this.getNode(node.id).inCircle._groups[0][0]);
+              });
+            });
+          }
+        });
+    }
   }
 
+  /**
+   * Gets a node with a specific ID
+   */
+  getNode(id): Node {
+    for (let i = 0; i < this.nodes.length; i++) {
+      if (this.nodes[i].id === id) {
+        return this.nodes[i];
+      }
+    }
+  }
+
+  /**
+   * Adds a node
+   */
+  addNode(component: ComponentModel, coords?: { x: number, y: number}, id?: string) {
+    coords = (coords || { x: this.width / 2 - 100, y: this.height / 2 - 40});
+
+    const node = new ComponentNode(self.svg.append('g'), component, coords, id);
+
+    // Save node
+    this.nodes.push(node);
+
+    // Set up drag functions
+    node.outCircle
+      .call(d3Drag.drag()
+      .on('start', this.startEdgeDrag)
+      .on('drag', this.dragEdge)
+      .on('end', this.endEdgeDrag));
+    node.inCircle
+      .call(d3Drag.drag()
+      .on('start', this.startEdgeDrag)
+      .on('drag', this.dragEdge)
+      .on('end', this.endEdgeDrag));
+    node.mainRect.call(d3Drag.drag()
+      .on('drag', this.drag)
+      .on('end', this.endDrag));
+    node.headerRect.call(d3Drag.drag()
+      .on('drag', this.drag)
+      .on('end', this.endDrag));
+
+    // Set up context menu function
+    if (node.component.author.username !== 'Math') {
+      node.group.on('contextmenu', () => {
+        d3.event.preventDefault();
+        this.contextMenuService.show.next({
+          contextMenu: this.componentMenu,
+          event: d3.event,
+          item: node,
+        });
+        return false;
+      });
+    } else {
+      node.group.on('contextmenu', () => {
+        d3.event.preventDefault();
+        this.contextMenuService.show.next({
+          contextMenu: this.deleteMenu,
+          event: d3.event,
+          item: node,
+        });
+        return false;
+      });
+    }    
+  }
+
+  /**
+   * Function called when dragging a node
+   */
+  drag() {
+    // Close any context menus that may be open
+    self.contextMenuService.destroyLeafMenu();
+    d3.select(this).datum().node.updatePosition(d3.event.x, d3.event.y);
+  }
+
+  /**
+   * Function called a node is finished being dragged
+   */
+  endDrag(d) {
+    d3.select(this).datum().node.updatePosition(d3.event.x, d3.event.y);
+    saveProject();
+  }
+
+  /**
+   * Function called when starting to drag from an input/output circle
+   */
   startEdgeDrag() {
-    const x = d3.mouse(d3.select('#mainsvg').node())[0];
-    const y = d3.mouse(d3.select('#mainsvg').node())[1];
+    const x = d3.select(d3.event.sourceEvent.target).attr('cx');
+    const y = d3.select(d3.event.sourceEvent.target).attr('cy');
     d3.select('#edgepath').attr('x1', x).attr('y1', y);
   }
 
+  /**
+   * Deletes a node
+   */
+  deleteNode(node: Node) {
+    node.remove();
+    this.nodes = this.nodes.filter(n => n.id !== node.id);
+    saveProject();
+  }
+
+  /**
+   * Called when an edge is dragged
+   */
   dragEdge() {
+    // Close all context menus
+    self.contextMenuService.destroyLeafMenu();
     const edge = d3.select('#edgepath');
-    const x = d3.mouse(d3.select('#mainsvg').node())[0];
-    const y = d3.mouse(d3.select('#mainsvg').node())[1];
+    const x = d3.mouse(self.svg.node())[0];
+    const y = d3.mouse(self.svg.node())[1];
     edge.attr('x2', x).attr('y2', y);
     edge.style('display', 'block');
   }
 
-  endEdgeDrag() {
-    d3.select('#edgepath').style('display', 'none');
-    const self: any = this;
-    const source = self;
-    const target = d3.event.sourceEvent.target;
-    if (target.tagName === 'circle' && source !== target) {
-      let edge:any = {};
-      edge.id = 'edge-' + UUID.UUID();
-      const x1 = d3.select('#edgepath').attr('x1');
-      const y1 = d3.select('#edgepath').attr('y1');
-      const x2 = d3.mouse(d3.select('#mainsvg').node())[0];
-      const y2 = d3.mouse(d3.select('#mainsvg').node())[1];
-      edge.source = d3.select(source).datum().node;
-      edge.sourceCircle = source;
-      edge.target = d3.select(target).datum().node;
-      edge.targetCircle = target;
-      edge.line = d3.select('#mainsvg')
-        .append('line')
-          .attr('class', 'realEdge')
-          .style('stroke', 'grey')
-          .style('stroke-width', '2px')
-          .attr('x1', x1)
-          .attr('y1', y1)
-          .attr('x2', x2)
-          .attr('y2', y2)
-          .attr('id', edge.id)
-          .datum({edge: edge});
-      d3.select(target).datum().node.edges.push(edge);
-      d3.select(source).datum().node.edges.push(edge);
+  /**
+   * Add an edge
+   */
+  addEdge(sourceCircle, targetCircle, id?: string) {
+    try {
+      const edge = new Edge(self.svg.append('line'), sourceCircle, targetCircle);
+
+      // Set up context menu
+      edge.line.on('contextmenu', () => {
+        d3.event.preventDefault();
+        self.contextMenuService.show.next({
+          contextMenu: self.deleteEdgeMenu,
+          event: d3.event,
+          item: edge,
+        });
+
+        return false;
+      });
+    } catch (error) {
+      if (error.message === 'Too many inputs') {
+        this.toastr.error('That node can take no more inputs', null, {showCloseButton: true});
+      } else {
+        console.log(error);
+      }
     }
   }
 
-  private initSvg() {
-    this.svg = d3.select('svg')
-                 .append('g');
+  /**
+   * Called when finished dragging the edge
+   */
+  endEdgeDrag() {
+    d3.select('#edgepath').style('display', 'none');
+    const source: any = this;
+    const target = d3.event.sourceEvent.target;
+    if (target.tagName === 'circle' && source !== target && d3.select(target).datum() && d3.select(target).datum().type) {
+      self.addEdge(source, target);
+      saveProject();
+    }
   }
 
-  private addOutput() {
-    let node:any;
-    node = {};
-    node.id = 'output-' + UUID.UUID();
-    node.group = d3.select('#mainsvg').append('g').attr('id', node.id);
-    node.edges = [];
+  /**
+   * Adds an output node to the design
+   */
+  private addOutput(coords?: { x: number, y: number}, id?: string) {
+    coords = coords || { x: this.width / 2 - 100, y: this.height / 2 - 40};
+    const node = new OutputNode(this.svg.append('g'), coords, id);
 
-    node.inCircle =
-    node.group.append('circle')
-      .attr('r', 5)
-      .attr('cx', this.width/2 - 132)
-      .attr('cy', this.height/2 - 40)
-      .attr('fill', 'grey')
+    // Set up drag handlers
+    node.inCircle
       .call(d3Drag.drag()
       .on('start', this.startEdgeDrag)
       .on('drag', this.dragEdge)
-      .on('end', this.endEdgeDrag))
-      .datum({node: node});
-    node.mainCircle =
-    node.group.append('circle')
-      .attr('cx', this.width/2 - 200 / 2)
-      .attr('cy', this.height/2 - 80 / 2)
-      .attr('r', 30)
-      .attr('fill', '#EEEEEE')
-      .attr('stroke-width', '5px')
-      .attr('stroke', '#D32F2F')
-      .datum({node: node});
-    node.text =
-    node.group.append('text')
-    .attr('text-anchor', 'middle')
-    .text("OUT")
-    .style('fill','#D32F2F')
-    .attr('x', this.width/2 - 100)
-    .attr('y', this.height/2 - 34);
+      .on('end', this.endEdgeDrag));
     node.group.call(d3Drag.drag()
-      .on('start', this.startDrag)
       .on('drag', this.drag)
       .on('end', this.endDrag));
       this.nodes.push(node);
-    node.componentName = "Output";
-    node.authorName = "Base";
-    node.group.datum({node: node});
 
-    node.update = function() {
-      const x = d3.event.x;
-      const y = d3.event.y;
-      this.mainCircle.attr('cx', x);
-      this.mainCircle.attr('cy', y);
-      this.inCircle.attr('cx', x - 32);
-      this.inCircle.attr('cy', y);
-      this.text.attr('x', x);
-      this.text.attr('y', y + 5);
-    };
-  }
-
-  private addInput() {
-    let node:any;
-    node = {};
-    node.id = 'input-' + UUID.UUID();
-    node.group = d3.select('#mainsvg').append('g').attr('id', node.id);
-    node.edges = [];
-
-    node.inCircle =
-    node.group.append('circle')
-      .attr('r', 5)
-      .attr('cx', this.width/2 - 68)
-      .attr('cy', this.height/2 - 40)
-      .attr('fill', 'grey')
-      .call(d3Drag.drag()
-      .on('start', this.startEdgeDrag)
-      .on('drag', this.dragEdge)
-      .on('end', this.endEdgeDrag))
-      .datum({node: node});
-    node.mainCircle =
-    node.group.append('circle')
-      .attr('cx', this.width/2 - 200 / 2)
-      .attr('cy', this.height/2 - 80 / 2)
-      .attr('r', 30)
-      .attr('fill', '#EEEEEE')
-      .attr('stroke-width', '5px')
-      .attr('stroke', '#D32F2F')
-      .datum({node: node});
-    node.text =
-    node.group.append('text')
-    .attr('text-anchor', 'middle')
-    .text("IN")
-    .style('fill','#D32F2F')
-    .attr('x', this.width/2 - 100)
-    .attr('y', this.height/2 - 34);
-    node.group.call(d3Drag.drag()
-      .on('start', this.startDrag)
-      .on('drag', this.drag)
-      .on('end', this.endDrag));
-      this.nodes.push(node);
-    node.componentName = "Input";
-    node.authorName = "Base";
-    node.group.datum({node: node});
-    node.dimensions = ['2', '2'];
-    node.values = ['1', '1', '1', '1'];
-
-    node.update = function() {
-      const x = d3.event.x;
-      const y = d3.event.y;
-      this.mainCircle.attr('cx', x);
-      this.mainCircle.attr('cy', y);
-      this.inCircle.attr('cx', x + 32);
-      this.inCircle.attr('cy', y);
-      this.text.attr('x', x);
-      this.text.attr('y', y + 5);
-    };
-  }
-
-  private executeSession() {
-    console.log(this.nodes);
-    const newNodes = this.nodes.map((node) => {
-      let resp:any = {
-        id: node.id,
-        author: node.authorName,
-        component: node.componentName,
-        edges: node.edges.map((edge) => {
-          return edge.id;
-        })
-      };
-      if (node.componentName == "Input") {
-        resp.dimensions = node.dimensions;
-        resp.values = node.values;
-      }
-      return resp;
-    });
-    this.sessionService.executeSession(newNodes);
-    console.log(newNodes);
-  }
-
-  private loadComponents(): Promise<{}[]> {
-    const self = this;
-    return this.componentsService.getComponents()
-    .then(function(res: any) {
-      return new Promise<{}[]>((resolve, reject) => {
-        let data: {}[];
-        if (JSON.parse(res._body).data === undefined) {
-          return [];
-        };
-        data = JSON.parse(res._body).data.map((item) => {
-          return {
-            id: item.id,
-            description: item.attributes.description,
-            name: item.attributes.name,
-            stats: item.attributes.stats,
-            usage: item.attributes.usage,
-            author: item.attributes.author.username
-          };
-        });
-        self.components = data;
+    // Set up contextmenu
+    node.group.on('contextmenu', () => {
+      d3.event.preventDefault();
+      this.contextMenuService.show.next({
+        contextMenu: this.deleteMenu,
+        event: d3.event,
+        item: node,
       });
+      return false;
     });
   }
 
+  /**
+   * Adds an output node to the design
+   */
+  private addInput(coords?: { x: number, y: number}, id?: string) {
+    coords = coords || { x: this.width / 2 - 100, y: this.height / 2 - 40};
+    const node = new InputNode(this.svg.append('g'), coords, id);
+
+    // Set up drag handlers
+    node.outCircle
+      .call(d3Drag.drag()
+      .on('start', this.startEdgeDrag)
+      .on('drag', this.dragEdge)
+      .on('end', this.endEdgeDrag));
+    node.group.call(d3Drag.drag()
+      .on('drag', this.drag)
+      .on('end', this.endDrag));
+      this.nodes.push(node);
+
+    // Set up contextmenu
+    node.group.on('contextmenu', () => {
+      d3.event.preventDefault();
+      this.contextMenuService.show.next({
+        contextMenu: this.inputMenu,
+        event: d3.event,
+        item: node,
+      });
+      return false;
+    });
+  }
+
+  /**
+   * Sends design to the API to be designed
+   */
+  private executeSession() {
+    this.project.data = this.nodesToJSON();
+    this.projectsService.execute(this.project)
+    .then((res: any) => {
+      if (res.json() && res.json().values) {
+        console.log(res.json);
+        this.toastr.success(res.json().values, 'Recieved Result', {showCloseButton: true});
+      }
+    })
+    .catch((res: Response) => {
+      if (res.json) {
+        console.log(res.json());
+        if (res.json().errors) {
+          this.toastr.error(res.json().errors[0].detail, null, {showCloseButton: true});
+        }
+      }
+    });
+  }
+
+  /**
+   * Loads components from the API
+   */
+  private loadComponents() {
+    this.componentsService.getComponents()
+    .then((components: ComponentModel[]) => {
+      this.components = components;
+    });
+  }
+
+  /**
+   * Sends design to the API to be saved
+   */
+  public saveProject() {
+    if (this.project !== undefined && this.project !== null) {
+      this.project.data = this.nodesToJSON();
+      this.projectsService.saveProject(this.project)
+      .catch(err => console.log(err));
+    }
+  }
+
+  /**
+   * Converts all nodes to a JSON representation
+   */
+  private nodesToJSON() {
+    return JSON.stringify(this.nodes.map((n: Node) => n.toJSON()));
+  }
+
+
+  /**
+   * Called when the set value button is pressed on a node. Shows the modal
+   */
+  setValues(node) {
+    this.currentInputNode = node;
+    $('#valueModal').modal('show');
+  }
+
+  /**
+   * Exports the project as a component
+   */
+  exportProject() {
+    this.project.data = this.nodesToJSON();
+    this.projectsService.export(this.project)
+      .then(() => {
+        this.toastr.success('Project exported', 'Sucess!', {showCloseButton: true});
+      })
+      .catch(err => {
+        if (err.json() && err.json().errors) {
+          this.toastr.error(err.json().errors[0].detail, 'Error', {showCloseButton: true});
+        } else {
+          this.toastr.error('Something went wrong :(', 'Error', {showCloseButton: true});
+        }
+      });
+  }
+
+  componentDetails(node: ComponentNode) {
+    this.router.navigateByUrl('/packages/' + node.component.id);
+  }
 }

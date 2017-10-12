@@ -8,14 +8,31 @@
 svg {
     border: 1px solid #D32F2F;
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 143px);
 }
 
-.components {
-    width: 100%;
+input[type='text'] {
+    color: grey;
 }
 
 .btn-execute {
     width: 100%;
     cursor: pointer;
 }
+
+.add-component-button {
+    top: calc(100vh/2);
+    left: -30px;
+    font-size: 6em;
+    height: 19vh;
+    width: 1%;
+}
+
+.edit-icon {
+    cursor: pointer;
+}
+
+// No idea why this doesn't work
+.ngx-contextmenu a {
+    color:black;
+  }

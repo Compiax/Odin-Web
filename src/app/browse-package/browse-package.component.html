@@ -1,6 +1,7 @@
 <!--View for package-->
 <br>
 <div class="container">
+  <app-search-box></app-search-box>
   <br>
   <br>
   <!-- Package header -->
@@ -17,11 +18,11 @@
     <h3 class="card-header red darken-2 white-text">Packages</h3>
     <div class="card-body">
       <div class="list-group">
-        <a [routerLink]="['/packages', item.id]" class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let item of components">
+        <a *ngFor="let component of components" [routerLink]="['/packages', component.id]" class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1"><span class="red-text">{{ item.author }}</span>/{{ item.name }}</h5>
+            <h5 class="mb-1"><span class="red-text">{{ component.author.username }}</span>/{{ component.name }}</h5>
           </div>
-          <p class="mb-1">{{ item.description }}</p>
+          <p class="mb-1">{{ component.description }}</p>
         </a>
       </div>
     </div>

@@ -1,11 +1,9 @@
 import { AuthService } from '../auth.service';
-import { Headers, Http } from '@angular/http';
+import { environment } from '../../../environments/environment';
+import 'rxjs/add/operator/toPromise';
+import { Headers, Http, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-
-import { environment } from './../../../environments/environment';
-
-import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class IsAuthenticatedGuard implements CanActivate {
@@ -18,15 +16,13 @@ export class IsAuthenticatedGuard implements CanActivate {
   }
 
   canActivate() {
-    console.log('Calling canActivate');
     const self = this;
     return new Promise<boolean>((resolve, reject) => {
       self.as.isLoggedIn().then(() => {
         resolve(true);
       })
-      .catch((res) => {
+      .catch((res: Response) => {
         if (res.status === 401) {
-          console.log("Not logged in");
           self.r.navigate(['/login']);
           resolve(false);
         };
@@ -37,7 +33,7 @@ export class IsAuthenticatedGuard implements CanActivate {
 
 
   isLoggedIn() {
-    const url = `${environment.api_url}/auth/loggedIn`;
+    const url = environment.api_url + '/auth/loggedIn';
 
     return this.http.post(url, '', {headers: this.headers})
     .toPromise();
