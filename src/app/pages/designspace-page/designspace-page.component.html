@@ -46,8 +46,13 @@
                     </button>
                 </div>
                 <div class="modal-body" *ngIf="currentInputNode">
-                    <input type="text" [(ngModel)]="currentInputNode.values">
+                    <label for="values-input">Values</label>
+                    <input id ="values-input" class="form-control" type="text" [(ngModel)]="currentInputNode.values">
+                    <label for="dimensions-input">Dimensions</label>
+                    <input id ="dimensions-input" class="form-control" type="text" [(ngModel)]="currentInputNode.dimensions">
                 </div>
+                <div class="modal-body" *ngIf="currentInputNode">
+            </div>
                 <div class="modal-footer">
                     <button type="button" class="btn brand-color " data-dismiss="modal" (click)="saveProject()">Done</button>
                 </div>

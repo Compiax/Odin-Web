@@ -315,7 +315,7 @@ export class DesignspacePageComponent implements OnInit {
     node.group.on('contextmenu', () => {
       d3.event.preventDefault();
       this.contextMenuService.show.next({
-        contextMenu: this.deleteMenu,
+        contextMenu: this.inputMenu,
         event: d3.event,
         item: node,
       });
