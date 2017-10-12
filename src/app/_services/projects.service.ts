@@ -35,10 +35,15 @@ export class ProjectsService {
     return this.http.get(url, {withCredentials: true})
       .toPromise()
       .then((res: Response) => {
-        return new Promise<Project>((resolve, reject) => {
-          const p = res.json().data[0];
-          resolve(new Project(p.attributes.name, p.attributes.description, p.id, p.attributes.data));
-        });
+          return new Promise<Project>((resolve, reject) => {
+            if (res.json() && res.json().data) {
+              const p = res.json().data[0];
+              resolve(new Project(p.attributes.name, p.attributes.description, p.id, p.attributes.data));
+            } else {
+              console.log(res);
+              reject('Invalid JSON response');
+            }
+          });
       });
   }
 
@@ -46,7 +51,7 @@ export class ProjectsService {
    * Creates a blank project with the title "Untitled Project" and no description
    */
   createNewProject() {
-    return this.createProject(new Project('Untitled Project', ''));
+    return this.createProject(new Project('Untitled Project', '', null, ''));
   }
 
   /**
@@ -69,8 +74,8 @@ export class ProjectsService {
    */
   saveProject(project: Project) {
     console.log('saveProject')
-    const url = `${environment.api_url}/projects/${project.id}`;
-    return this.http.patch(url, project, {withCredentials: true})
+    const url = `${environment.api_url}/projects/${project.id}/save`;
+    return this.http.patch(url, {projectID: project.id, nodes: project.data, newData: project}, {withCredentials: true})
       .toPromise();
   }
 
@@ -80,6 +85,24 @@ export class ProjectsService {
   deleteProject(project: Project) {
     const url = `${environment.api_url}/projects/${project.id}`;
     return this.http.delete(url, {withCredentials: true})
+      .toPromise();
+  }
+
+  /**
+   * Executes a project
+   */
+  execute(project: Project) {
+    const url = `${environment.api_url}/projects/${project.id}/execute`;
+    return this.http.post(url, {projectID: project.id, nodes: project.data}, {withCredentials: true})
+      .toPromise();
+  }
+
+  /**
+   * Exports a project
+   */
+  export(project: Project) {
+    const url = `${environment.api_url}/projects/${project.id}/export`;
+    return this.http.post(url, {projectID: project.id, nodes: project.data}, {withCredentials: true})
       .toPromise();
   }
 }

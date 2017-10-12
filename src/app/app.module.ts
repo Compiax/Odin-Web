@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SessionService } from './_services/session.service';
 import { ProjectsService } from './_services/projects.service';
 import { ComponentsService } from './_services/components.service';
@@ -14,7 +15,8 @@ import { RouterModule} from '@angular/router';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from './_services/auth.service';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ContextMenuModule } from 'ngx-contextmenu/lib';
+import { ParticlesModule } from 'angular-particle';
 
 @NgModule({
   declarations: [
@@ -26,10 +28,11 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     BrowserModule,
     CoreModule,
     HttpModule,
-    BrowserAnimationsModule,
     ToastModule.forRoot(),
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    ContextMenuModule,
+    BrowserAnimationsModule
   ],
   providers: [AuthService, IsAuthenticatedGuard, ComponentsService, ProjectsService, SessionService],
   bootstrap: [AppComponent]
