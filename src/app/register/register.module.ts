@@ -1,3 +1,4 @@
+import { ParticlesModule } from 'angular-particle';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule }   from '@angular/forms';
@@ -14,7 +15,8 @@ import { RegisterBoxComponent } from './register-box/register-box.component';
   imports: [
     CommonModule,
     RegisterRoutingModule,
-    FormsModule
+    FormsModule,
+    ParticlesModule
   ]
 })
 

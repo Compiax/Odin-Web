@@ -7,8 +7,7 @@ import { SearchBoxComponent } from '../search-box/search-box.component';
 
 @NgModule({
   declarations: [
-      ViewPackageComponent,
-      SearchBoxComponent
+      ViewPackageComponent
   ],
   imports: [
     CommonModule,

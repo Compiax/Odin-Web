@@ -1,3 +1,4 @@
+import { ParticlesModule } from 'angular-particle';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,7 +16,8 @@ import { LoginBoxComponent } from './login-box/login-box.component'
     CommonModule,
     LoginRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ParticlesModule
   ]
 })
 export default class LoginModule { }

@@ -31,7 +31,7 @@ export class RegisterBoxComponent {
   public onSubmit() {
     const formModel = this.registerForm.value;
     const form = this.registerForm;
-
+    console.log("Hi")
     if (this.registerForm.status === 'INVALID') {
       if (this.registerForm.get('username').status === 'INVALID') {
         this.toastr.error('Username is missing');
@@ -46,10 +46,17 @@ export class RegisterBoxComponent {
       const user = new User(form.get('username').value, form.get('password').value, form.get('email').value);
       this.authService.register(user)
       .then((u: User) => {
+          console.log('hi?')
           this.router.navigateByUrl('/login');
       })
       .catch((res: Response) => {
-        this.toastr.error(res.json().errors[0].detail, null, {showCloseButton: true});
+        if (res.json().errors) {
+          this.toastr.error(res.json().errors[0].detail, null, {showCloseButton: true});
+        } else if (res.url == null) {
+          this.toastr.error("Cannot connect to server");
+        } else {
+          console.log(res);
+        }
       });
     }
   };
