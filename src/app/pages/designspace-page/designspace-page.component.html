@@ -75,7 +75,7 @@
                     <a (click)="addOutput(); saveProject()" class="list-group-item"><i class="fa fa-sign-out mr-2"></i>Output</a>
                     <a (click)="executeSession()" class="list-group-item"><i class="fa fa-play mr-2"></i>Execute</a>
                     <a href="#" class="list-group-item active">Components</a>
-                    <a *ngFor="let component of getComponents()" (click)="addNode(component); saveProject()" class="list-group-item"><i class="fa fa-calculator mr-2"></i><span class='text-muted'>{{ component.name }}</span>/{{ component.author.username }}</a>
+                    <a *ngFor="let component of getComponents()" (click)="addNode(component); saveProject()" class="list-group-item"><i class="fa fa-cubes mr-2"></i><span class='text-muted'>{{ component.name }}</span>/{{ component.author.username }}</a>
                 </div>
                 <div class="row px-2 fixed-bottom">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
