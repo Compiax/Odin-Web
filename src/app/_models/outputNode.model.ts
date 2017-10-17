@@ -16,8 +16,8 @@ export class OutputNode extends Node {
 
         this.mainCircle.attr('cx', x);
         this.mainCircle.attr('cy', y);
-        this.inCircle.attr('cx', x - 32);
-        this.inCircle.attr('cy', y);
+        this.inCircles[0].attr('cx', x - 32);
+        this.inCircles[0].attr('cy', y);
         this.text.attr('x', x);
         this.text.attr('y', y + 5);
     }
@@ -34,13 +34,13 @@ export class OutputNode extends Node {
 
         this.group.datum({node: this});
 
-        this.inCircle =
-        this.group.append('circle')
+        this.inCircles =
+        [this.group.append('circle')
             .attr('r', 7)
             .attr('cx', coords.x - 32)
             .attr('cy', coords.y)
             .attr('fill', 'grey')
-            .datum({node: this, type: 'input'});
+            .datum({node: this, type: 'input', inputNumber: 0})];
 
         this.mainCircle =
         this.group.append('circle')

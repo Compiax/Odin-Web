@@ -5,7 +5,6 @@ export class ComponentNode extends Node {
     public mainRect: any;
     public headerRect: any;
     public text: any;
-    public inputsText: any;
 
     public component: ComponentModel;
 
@@ -18,14 +17,15 @@ export class ComponentNode extends Node {
         this.mainRect.attr('y', y);
         this.headerRect.attr('x', x);
         this.headerRect.attr('y', y);
-        this.inCircle.attr('cx', x);
-        this.inCircle.attr('cy', y + 40);
         this.outCircle.attr('cx', x + 200);
         this.outCircle.attr('cy', y + 40);
-        this.inputsText.attr('x', x + 5);
-        this.inputsText.attr('y', y + 46);
         this.text.attr('x', x + 100);
         this.text.attr('y', y + 20);
+
+        for (const circle of this.inCircles) {
+            circle.attr('cx', x);
+            circle.attr('cy', y + circle.datum().offset.y + 40);
+        }
     }
 
     public toJSON() {
@@ -42,15 +42,20 @@ export class ComponentNode extends Node {
 
         this.outCircle =
         this.group.append('circle')
-          .attr('r', 7)
+          .attr('r', 8)
           .attr('fill', 'grey')
           .datum({node: this, type: 'output'});
 
-        this.inCircle =
-        this.group.append('circle')
-          .attr('r', 7)
-          .attr('fill', 'grey')
-          .datum({node: this, type: 'input'});
+        for (let x = 0; x < component.inputs; x++) {
+            this.inCircles.push(
+                this.group.append('circle')
+                .attr('r', 7)
+                .attr('fill', 'grey')
+                .attr('cx', coords.x - 100)
+                .attr('cy', coords.y - 50 + (100 / (component.inputs + 1) * (x + 1)))
+                .datum({node: this, type: 'input', inputNumber: x, offset: { x: -100, y: - 50 + (100 / (component.inputs + 1) * (x + 1))}})
+            );
+        }
 
         this.mainRect =
         this.group.append('rect')
@@ -72,13 +77,7 @@ export class ComponentNode extends Node {
         this.group.append('text')
             .attr('text-anchor', 'middle')
             .text(component.name)
-            .style('fill', 'white')
-
-        this.inputsText =
-        this.group.append('text')
-            .text(this.maxInputs)
-            .style('fill', 'black')
-            .attr('font-size', 11);
+            .style('fill', 'white');
 
         this.group.datum({node: this});
 
