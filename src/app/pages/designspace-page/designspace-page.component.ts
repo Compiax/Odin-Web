@@ -92,8 +92,11 @@ export class DesignspacePageComponent implements OnInit {
           if (project.data) {
             const nodes = JSON.parse(project.data);
             nodes.forEach(node => {
+              console.log(node);
               if (node.type === 'Input') {
-                this.addInput(node.coords, node.id);
+                this.addInput(node.coords, node.id)
+                  .setValues(node.variable.values)
+                  .setDimensions(node.variable.dimensions);
               } else if (node.type === 'Output') {
                 this.addOutput(node.coords, node.id);
               } else {
@@ -328,6 +331,7 @@ export class DesignspacePageComponent implements OnInit {
       });
       return false;
     });
+    return node;
   }
 
   /**
