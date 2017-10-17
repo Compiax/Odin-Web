@@ -65,9 +65,6 @@ export class DesignspacePageComponent implements OnInit {
       self.svg.attr('transform', d3.event.transform);
     }));
 
-    // Load components
-    this.loadComponents();
-
     // Get ID of project and load it
     this.route.params.subscribe(params => {
       this.loadProject(params['id']);
@@ -78,6 +75,7 @@ export class DesignspacePageComponent implements OnInit {
    * Loads the project from the API
    */
   private loadProject(id: String) {
+    this.loadComponents();
     this.nodes.forEach(n => this.deleteNode(n));
     if (id === 'new') {
       this.project = new Project('Untitled Project', '');
@@ -158,6 +156,7 @@ export class DesignspacePageComponent implements OnInit {
     if (node.component.author.username !== 'Math') {
       node.group.on('contextmenu', () => {
         d3.event.preventDefault();
+        self.contextMenuService.destroyLeafMenu();
         this.contextMenuService.show.next({
           contextMenu: this.componentMenu,
           event: d3.event,
@@ -167,6 +166,7 @@ export class DesignspacePageComponent implements OnInit {
       });
     } else {
       node.group.on('contextmenu', () => {
+        self.contextMenuService.destroyLeafMenu();
         d3.event.preventDefault();
         this.contextMenuService.show.next({
           contextMenu: this.deleteMenu,
@@ -235,6 +235,7 @@ export class DesignspacePageComponent implements OnInit {
 
       // Set up context menu
       edge.line.on('contextmenu', () => {
+        self.contextMenuService.destroyLeafMenu();
         d3.event.preventDefault();
         self.contextMenuService.show.next({
           contextMenu: self.deleteEdgeMenu,
@@ -286,6 +287,7 @@ export class DesignspacePageComponent implements OnInit {
 
     // Set up contextmenu
     node.group.on('contextmenu', () => {
+      self.contextMenuService.destroyLeafMenu();
       d3.event.preventDefault();
       this.contextMenuService.show.next({
         contextMenu: this.deleteMenu,
@@ -316,6 +318,7 @@ export class DesignspacePageComponent implements OnInit {
 
     // Set up contextmenu
     node.group.on('contextmenu', () => {
+      self.contextMenuService.destroyLeafMenu();
       d3.event.preventDefault();
       this.contextMenuService.show.next({
         contextMenu: this.inputMenu,
@@ -391,6 +394,7 @@ export class DesignspacePageComponent implements OnInit {
     this.project.data = this.nodesToJSON();
     this.projectsService.export(this.project)
       .then(() => {
+        this.loadComponents();
         this.toastr.success('Project exported', 'Sucess!', {showCloseButton: true});
       })
       .catch(err => {
