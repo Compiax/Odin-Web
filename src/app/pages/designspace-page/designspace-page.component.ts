@@ -40,6 +40,7 @@ export class DesignspacePageComponent implements OnInit {
   public currentInputNode: any = null;
   public project: Project;
   private nodes: Node[] = [];
+  private searchParam = '';
 
   constructor(private componentsService: ComponentsService,
               private sessionService: SessionService,
@@ -408,5 +409,21 @@ export class DesignspacePageComponent implements OnInit {
 
   componentDetails(node: ComponentNode) {
     this.router.navigateByUrl('/packages/' + node.component.id);
+  }
+
+  getComponents() {
+    if (this.searchParam === '') {
+      return this.components;
+    } else {
+      return this.components.filter(c => {
+        if (c.author.username.match(new RegExp(`.*${this.searchParam}.*`, 'i'))) {
+            return true;
+        } else if (c.name.match(new RegExp(`.*${this.searchParam}.*`, 'i'))) {
+            return true;
+        } else {
+            return false;
+        }
+      });
+    }
   }
 }
