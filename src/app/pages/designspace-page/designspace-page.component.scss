@@ -6,9 +6,12 @@
 }
 
 svg {
+    padding: 0;
+    margin: 0;
     border: 1px solid #D32F2F;
     width: 100%;
-    height: calc(100vh - 143px);
+    height: 79%;
+    // height: calc(100vh - 143px);
 }
 
 input[type='text'] {

@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
       this.myStyle = {
         'position': 'relative',
         'width': '100%',
-        'height': '100%',
+        'height': '99%',
         'z-index': 1,
         'top': 0,
         'left': 0,
