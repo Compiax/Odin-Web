@@ -102,9 +102,9 @@ export class DesignspacePageComponent implements OnInit {
               }
             });
             nodes.forEach(node => {
-              node.parents.forEach(edge => {
-                this.addEdge(this.getNode(edge).outCircle._groups[0][0], this.getNode(node.id).inCircle._groups[0][0]);
-              });
+              for (let x = 0; x < node.parents.length; x++) {
+                this.addEdge(this.getNode(node.parents[x]).outCircle._groups[0][0], this.getNode(node.id).inCircles[x]._groups[0][0]);
+              }
             });
           }
         });
@@ -139,11 +139,14 @@ export class DesignspacePageComponent implements OnInit {
       .on('start', this.startEdgeDrag)
       .on('drag', this.dragEdge)
       .on('end', this.endEdgeDrag));
-    node.inCircle
-      .call(d3Drag.drag()
-      .on('start', this.startEdgeDrag)
-      .on('drag', this.dragEdge)
-      .on('end', this.endEdgeDrag));
+
+    for (const circle of node.inCircles) {
+      circle.call(d3Drag.drag()
+        .on('start', this.startEdgeDrag)
+        .on('drag', this.dragEdge)
+        .on('end', this.endEdgeDrag));
+    }
+
     node.mainRect.call(d3Drag.drag()
       .on('drag', this.drag)
       .on('end', this.endDrag));
@@ -172,7 +175,7 @@ export class DesignspacePageComponent implements OnInit {
         });
         return false;
       });
-    }    
+    }
   }
 
   /**
@@ -271,7 +274,7 @@ export class DesignspacePageComponent implements OnInit {
     const node = new OutputNode(this.svg.append('g'), coords, id);
 
     // Set up drag handlers
-    node.inCircle
+    node.inCircles[0]
       .call(d3Drag.drag()
       .on('start', this.startEdgeDrag)
       .on('drag', this.dragEdge)
@@ -331,7 +334,6 @@ export class DesignspacePageComponent implements OnInit {
     this.projectsService.execute(this.project)
     .then((res: any) => {
       if (res.json() && res.json().values) {
-        console.log(res.json);
         this.toastr.success(res.json().values, 'Recieved Result', {showCloseButton: true});
       }
     })
