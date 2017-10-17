@@ -1,0 +1,4 @@
+.active-pink-2 input[type=text]:focus:not([readonly]) {
+    border-bottom: 1px solid #d32f2f;
+    box-shadow: 0 1px 0 0 #d32f2f;
+}
