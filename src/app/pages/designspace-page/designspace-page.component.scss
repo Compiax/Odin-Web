@@ -1,5 +1,5 @@
 .fakeEdge {
-    stroke: #BDBDBD; 
+    stroke: #BDBDBD;
     stroke-width: 2px;
     display:none;
     stroke-dasharray: 5 7;
@@ -31,8 +31,21 @@ input[type='text'] {
     width: 1%;
 }
 
+.show-output-button {
+    top: calc(100vh/2);
+    right: 18px;
+    font-size: 6em;
+    height: 19vh;
+    width: 1%;
+}
+
 .edit-icon {
     cursor: pointer;
+}
+
+.output-label {
+  margin: 0px;
+  padding: 5px;
 }
 
 // No idea why this doesn't work

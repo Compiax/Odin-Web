@@ -5,6 +5,8 @@ import { OutputNode } from './../../_models/outputNode.model';
 import { Node } from './../../_models/node.model';
 import { ComponentNode } from './../../_models/componentNode.model';
 import { ComponentModel } from './../../_models/component.model';
+import { VariableModel } from './../../_models/variable.model'
+
 import { ProjectsService } from './../../_services/projects.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from './../../_models/project.model';
@@ -42,6 +44,8 @@ export class DesignspacePageComponent implements OnInit {
   public project: Project;
   private nodes: Node[] = [];
   private searchParam = '';
+
+  public output : VariableModel = null;
 
   constructor(private componentsService: ComponentsService,
               private sessionService: SessionService,
@@ -377,16 +381,18 @@ export class DesignspacePageComponent implements OnInit {
     this.project.data = this.nodesToJSON();
     this.projectsService.execute(this.project)
     .then((res: any) => {
-      if (res.json() && res.json().values) {
-        this.toastr.success(res.json().values, 'Recieved Result', {showCloseButton: true});
-      }
-    })
-    .catch((res: Response) => {
-      if (res.json) {
-        console.log(res.json());
-        if (res.json().errors) {
-          this.toastr.error(res.json().errors[0].detail, null, {showCloseButton: true});
-        }
+      let body = res.json();
+      console.log(body);
+      if (body && body.values) {
+        this.output = new VariableModel();
+        this.output.parse(body);
+        this.toastr.success('', 'Recieved Result', {showCloseButton: true});
+      } else if (body.errors) {
+        this.output = null;
+        body.errors.forEach(error => {
+          console.log(error);
+          this.toastr.error(error.details, null, {showCloseButton: true});
+        })
       }
     });
   }
