@@ -386,7 +386,9 @@ export class DesignspacePageComponent implements OnInit {
       if (body && body.values) {
         this.output = new VariableModel();
         this.output.parse(body);
-        this.toastr.success('', 'Recieved Result', {showCloseButton: true});
+        // this.toastr.success('', 'Recieved Result', {showCloseButton: true});
+        $('#outputModal').modal('show');
+        console.log($('#outputModal'));
       } else if (body.errors) {
         this.output = null;
         body.errors.forEach(error => {
