@@ -30,5 +30,4 @@ export class BrowseProjectsComponent implements OnInit {
       this.loadProjects();
     });
   }
-
 }

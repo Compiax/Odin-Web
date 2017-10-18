@@ -23,16 +23,34 @@ export class InputNode extends Node {
         this.outCircle.attr('cy', y);
         this.text.attr('x', x);
         this.text.attr('y', y + 5);
+
+        console.log(this.dimensions);
+        if (this.dimensions.length === 1 && this.dimensions[0] == 1) {
+            // Is a scalar
+            this.text.text(this.values[0]);
+        } else {
+            this.text.text('IN');
+        }
+    }
+
+    public setValues(values: any) {
+        this.values = values;
+        return this;
+    }
+
+    public setDimensions(dimensions: any) {
+        this.dimensions = dimensions;
+        return this;
     }
 
     public toJSON() {
         const json = super.toJSON();
         json.type = 'Input';
         if (typeof this.values === 'string') {
-            this.values = this.values.split(',').map(i => parseInt(i, 10));
+            this.values = this.values.split(',').map(i => parseFloat(i));
         }
         if (typeof this.dimensions === 'string') {
-            this.dimensions = this.dimensions.split(',').map(i => parseInt(i, 10));
+            this.dimensions = this.dimensions.split(',').map(i => parseFloat(i));
         }
         json.variable = {
             values: this.values,

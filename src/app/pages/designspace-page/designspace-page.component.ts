@@ -1,9 +1,12 @@
+import { ConstNode } from './../../_models/constNode.model';
 import { Edge } from './../../_models/edge.model';
 import { InputNode } from './../../_models/inputNode.model';
 import { OutputNode } from './../../_models/outputNode.model';
 import { Node } from './../../_models/node.model';
 import { ComponentNode } from './../../_models/componentNode.model';
 import { ComponentModel } from './../../_models/component.model';
+import { VariableModel } from './../../_models/variable.model'
+
 import { ProjectsService } from './../../_services/projects.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from './../../_models/project.model';
@@ -40,6 +43,9 @@ export class DesignspacePageComponent implements OnInit {
   public currentInputNode: any = null;
   public project: Project;
   private nodes: Node[] = [];
+  private searchParam = '';
+
+  public output : VariableModel = null;
 
   constructor(private componentsService: ComponentsService,
               private sessionService: SessionService,
@@ -65,9 +71,6 @@ export class DesignspacePageComponent implements OnInit {
       self.svg.attr('transform', d3.event.transform);
     }));
 
-    // Load components
-    this.loadComponents();
-
     // Get ID of project and load it
     this.route.params.subscribe(params => {
       this.loadProject(params['id']);
@@ -78,6 +81,7 @@ export class DesignspacePageComponent implements OnInit {
    * Loads the project from the API
    */
   private loadProject(id: String) {
+    this.loadComponents();
     this.nodes.forEach(n => this.deleteNode(n));
     if (id === 'new') {
       this.project = new Project('Untitled Project', '');
@@ -93,18 +97,23 @@ export class DesignspacePageComponent implements OnInit {
           if (project.data) {
             const nodes = JSON.parse(project.data);
             nodes.forEach(node => {
+              console.log(node);
               if (node.type === 'Input') {
-                this.addInput(node.coords, node.id);
+                this.addInput(node.coords, node.id)
+                  .setValues(node.variable.values)
+                  .setDimensions(node.variable.dimensions);
               } else if (node.type === 'Output') {
                 this.addOutput(node.coords, node.id);
-              } else {
+              } else if (node.type === 'Constant') {
+                this.addConst(node.coords, node.id);
+              } else{
                 this.addNode(node.component, node.coords, node.id);
               }
             });
             nodes.forEach(node => {
-              node.parents.forEach(edge => {
-                this.addEdge(this.getNode(edge).outCircle._groups[0][0], this.getNode(node.id).inCircle._groups[0][0]);
-              });
+              for (let x = 0; x < node.parents.length; x++) {
+                this.addEdge(this.getNode(node.parents[x]).outCircle._groups[0][0], this.getNode(node.id).inCircles[x]._groups[0][0]);
+              }
             });
           }
         });
@@ -139,11 +148,14 @@ export class DesignspacePageComponent implements OnInit {
       .on('start', this.startEdgeDrag)
       .on('drag', this.dragEdge)
       .on('end', this.endEdgeDrag));
-    node.inCircle
-      .call(d3Drag.drag()
-      .on('start', this.startEdgeDrag)
-      .on('drag', this.dragEdge)
-      .on('end', this.endEdgeDrag));
+
+    for (const circle of node.inCircles) {
+      circle.call(d3Drag.drag()
+        .on('start', this.startEdgeDrag)
+        .on('drag', this.dragEdge)
+        .on('end', this.endEdgeDrag));
+    }
+
     node.mainRect.call(d3Drag.drag()
       .on('drag', this.drag)
       .on('end', this.endDrag));
@@ -155,6 +167,7 @@ export class DesignspacePageComponent implements OnInit {
     if (node.component.author.username !== 'Math') {
       node.group.on('contextmenu', () => {
         d3.event.preventDefault();
+        self.contextMenuService.destroyLeafMenu();
         this.contextMenuService.show.next({
           contextMenu: this.componentMenu,
           event: d3.event,
@@ -164,6 +177,7 @@ export class DesignspacePageComponent implements OnInit {
       });
     } else {
       node.group.on('contextmenu', () => {
+        self.contextMenuService.destroyLeafMenu();
         d3.event.preventDefault();
         this.contextMenuService.show.next({
           contextMenu: this.deleteMenu,
@@ -172,7 +186,7 @@ export class DesignspacePageComponent implements OnInit {
         });
         return false;
       });
-    }    
+    }
   }
 
   /**
@@ -205,6 +219,7 @@ export class DesignspacePageComponent implements OnInit {
    * Deletes a node
    */
   deleteNode(node: Node) {
+    self.contextMenuService.destroyLeafMenu();
     node.remove();
     this.nodes = this.nodes.filter(n => n.id !== node.id);
     saveProject();
@@ -232,6 +247,7 @@ export class DesignspacePageComponent implements OnInit {
 
       // Set up context menu
       edge.line.on('contextmenu', () => {
+        self.contextMenuService.destroyLeafMenu();
         d3.event.preventDefault();
         self.contextMenuService.show.next({
           contextMenu: self.deleteEdgeMenu,
@@ -271,7 +287,7 @@ export class DesignspacePageComponent implements OnInit {
     const node = new OutputNode(this.svg.append('g'), coords, id);
 
     // Set up drag handlers
-    node.inCircle
+    node.inCircles[0]
       .call(d3Drag.drag()
       .on('start', this.startEdgeDrag)
       .on('drag', this.dragEdge)
@@ -283,6 +299,7 @@ export class DesignspacePageComponent implements OnInit {
 
     // Set up contextmenu
     node.group.on('contextmenu', () => {
+      self.contextMenuService.destroyLeafMenu();
       d3.event.preventDefault();
       this.contextMenuService.show.next({
         contextMenu: this.deleteMenu,
@@ -313,6 +330,7 @@ export class DesignspacePageComponent implements OnInit {
 
     // Set up contextmenu
     node.group.on('contextmenu', () => {
+      self.contextMenuService.destroyLeafMenu();
       d3.event.preventDefault();
       this.contextMenuService.show.next({
         contextMenu: this.inputMenu,
@@ -321,6 +339,39 @@ export class DesignspacePageComponent implements OnInit {
       });
       return false;
     });
+    return node;
+  }
+
+  /**
+   * Adds an output node to the design
+   */
+  private addConst(coords?: { x: number, y: number}, id?: string) {
+    coords = coords || { x: this.width / 2 - 100, y: this.height / 2 - 40};
+    const node = new ConstNode(this.svg.append('g'), coords, id);
+
+    // Set up drag handlers
+    node.outCircle
+      .call(d3Drag.drag()
+      .on('start', this.startEdgeDrag)
+      .on('drag', this.dragEdge)
+      .on('end', this.endEdgeDrag));
+    node.group.call(d3Drag.drag()
+      .on('drag', this.drag)
+      .on('end', this.endDrag));
+      this.nodes.push(node);
+
+    // Set up contextmenu
+    node.group.on('contextmenu', () => {
+      self.contextMenuService.destroyLeafMenu();
+      d3.event.preventDefault();
+      this.contextMenuService.show.next({
+        contextMenu: this.inputMenu,
+        event: d3.event,
+        item: node,
+      });
+      return false;
+    });
+    return node;
   }
 
   /**
@@ -330,17 +381,20 @@ export class DesignspacePageComponent implements OnInit {
     this.project.data = this.nodesToJSON();
     this.projectsService.execute(this.project)
     .then((res: any) => {
-      if (res.json() && res.json().values) {
-        console.log(res.json);
-        this.toastr.success(res.json().values, 'Recieved Result', {showCloseButton: true});
-      }
-    })
-    .catch((res: Response) => {
-      if (res.json) {
-        console.log(res.json());
-        if (res.json().errors) {
-          this.toastr.error(res.json().errors[0].detail, null, {showCloseButton: true});
-        }
+      let body = res.json();
+      console.log(body);
+      if (body && body.values) {
+        this.output = new VariableModel();
+        this.output.parse(body);
+        // this.toastr.success('', 'Recieved Result', {showCloseButton: true});
+        $('#outputModal').modal('show');
+        console.log($('#outputModal'));
+      } else if (body.errors) {
+        this.output = null;
+        body.errors.forEach(error => {
+          console.log(error);
+          this.toastr.error(error.details, null, {showCloseButton: true});
+        })
       }
     });
   }
@@ -389,6 +443,7 @@ export class DesignspacePageComponent implements OnInit {
     this.project.data = this.nodesToJSON();
     this.projectsService.export(this.project)
       .then(() => {
+        this.loadComponents();
         this.toastr.success('Project exported', 'Sucess!', {showCloseButton: true});
       })
       .catch(err => {
@@ -402,5 +457,21 @@ export class DesignspacePageComponent implements OnInit {
 
   componentDetails(node: ComponentNode) {
     this.router.navigateByUrl('/packages/' + node.component.id);
+  }
+
+  getComponents() {
+    if (this.searchParam === '') {
+      return this.components;
+    } else {
+      return this.components.filter(c => {
+        if (c.author.username.match(new RegExp(`.*${this.searchParam}.*`, 'i'))) {
+            return true;
+        } else if (c.name.match(new RegExp(`.*${this.searchParam}.*`, 'i'))) {
+            return true;
+        } else {
+            return false;
+        }
+      });
+    }
   }
 }

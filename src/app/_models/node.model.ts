@@ -3,10 +3,14 @@ import { UUID } from 'angular2-uuid';
 export class Node {
     public group: any;
 
-    public inCircle = null;
+    // public inCircle = null;
     public outCircle = null;
 
-    public inputs: Edge[];
+    public inCircles = [];
+
+    public inputs: {
+        edge: Edge
+    }[];
     public output: Edge;
 
     public coords: {
@@ -26,17 +30,17 @@ export class Node {
             this.output.updateSourceEnd();
         }
 
-        this.inputs.forEach((edge: Edge) => {
-            edge.updateTargetEnd();
-        })
+        this.inputs.forEach((input) => {
+            input.edge.updateTargetEnd();
+        });
     }
 
     public remove() {
         this.group.remove();
-        this.inputs.forEach(e => e.remove());
-        console.log(this.output)
+        this.inputs.forEach(i => i.edge.remove());
+        console.log(this.output);
         if (this.output != null) {
-            console.log('Deleting output')
+            console.log('Deleting output');
             this.output.remove();
         }
     }
@@ -44,8 +48,8 @@ export class Node {
     public toJSON(): any {
         return {
             id: this.id,
-            parents: this.inputs.map((e: Edge) => {
-                return e.source.id;
+            parents: this.inputs.map((i) => {
+                return i.edge.source.id;
             }),
             child: this.output ? this.output.target.id : null,
             coords: {
@@ -60,7 +64,7 @@ export class Node {
     }
 
     public addInputEdge(edge: Edge) {
-        this.inputs.push(edge);
+        this.inputs.push({edge: edge});
     }
 
     public addOutputEdge(edge: Edge) {
@@ -68,8 +72,8 @@ export class Node {
     }
 
     public removeInputEdge(edge: Edge) {
-        this.inputs = this.inputs.filter((e: Edge) => {
-            return (e.id !== edge.id);
+        this.inputs = this.inputs.filter((i) => {
+            return (i.edge.id !== edge.id);
         });
     }
 

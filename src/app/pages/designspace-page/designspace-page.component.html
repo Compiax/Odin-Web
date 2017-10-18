@@ -1,7 +1,10 @@
 <br>
 <div class="container">
     <div class="row">
-        <h1>{{ project?.name }}</h1><i class="fa fa-pencil fa-lg my-3 mx-2 edit-icon" data-toggle="modal" data-target="#nameModal"></i><i class="edit-icon fa fa-play mx-2 fa-lg my-3" (click)="executeSession()"></i><i class="edit-icon fa fa-share-square-o mx-2 fa-lg my-3" (click)="exportProject()"></i>
+        <h1>{{ project?.name }}</h1>
+        <i class="fa fa-pencil fa-lg my-3 mx-2 edit-icon" data-toggle="modal" data-target="#nameModal"></i>
+        <i class="edit-icon fa fa-play mx-2 fa-lg my-3" (click)="executeSession()"></i>
+        <i class="edit-icon fa fa-share-square-o mx-2 fa-lg my-3" (click)="exportProject()"></i>
     </div>
 </div>
 <svg class="grey lighten-3 m-0 p-0" #svgElement>
@@ -15,20 +18,26 @@
         <i class="fa fa-caret-right" data-toggle="modal" data-target="#componentsModal"></i>
     </a>
 </div>
-                                        
 
 <div *ngIf="project">
     <div class="modal fade" id="nameModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title w-100" id="myModalLabel">Project Title</h4>
+                    <h4 class="modal-title w-100" id="myModalLabel">Project Details</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" [(ngModel)]="project.name">
+                    <div class="md-form">
+                        <input id="projectName" type="text" class="form-control" [(ngModel)]="project.name" name="projectName">
+                        <label for="projectName" class="">Project Name</label>
+                    </div>
+                    <div class="md-form">
+                        <input id="projectDescription" type="text" class="form-control" [(ngModel)]="project.description" name="projectDescription">
+                        <label for="projectDescription" class="">Project Description</label>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn brand-color " data-dismiss="modal" (click)="saveProject()">Save changes</button>
@@ -47,9 +56,9 @@
                 </div>
                 <div class="modal-body" *ngIf="currentInputNode">
                     <label for="values-input">Values</label>
-                    <input id ="values-input" class="form-control" type="text" [(ngModel)]="currentInputNode.values">
+                    <input id ="values-input" class="form-control active-pink-2" type="text" [(ngModel)]="currentInputNode.values">
                     <label for="dimensions-input">Dimensions</label>
-                    <input id ="dimensions-input" class="form-control" type="text" [(ngModel)]="currentInputNode.dimensions">
+                    <input id ="dimensions-input" class="form-control active-pink-2" type="text" [(ngModel)]="currentInputNode.dimensions">
                 </div>
                 <div class="modal-body" *ngIf="currentInputNode">
             </div>
@@ -61,15 +70,40 @@
     </div>
     <div *ngIf="components" class="modal fade left" id="componentsModal" tabindex="-1">
         <div class="modal-dialog modal-full-height modal-left">
-            <div class="modal-content">                   
+            <div class="modal-content">
                 <div class="list-group z-depth-0">
-                    <a href="#" class="list-group-item active">Base</a>
+                    <p class="white-text list-group-item active">Base</p>
                     <a (click)="addInput(); saveProject()" class="list-group-item"><i class="fa fa-pencil-square-o mr-2"></i>Input</a>
                     <a (click)="addOutput(); saveProject()" class="list-group-item"><i class="fa fa-sign-out mr-2"></i>Output</a>
+                    <a (click)="addConst(); saveProject()" class="list-group-item"><i class="fa fa-lock mr-2"></i>Constant</a>
                     <a (click)="executeSession()" class="list-group-item"><i class="fa fa-play mr-2"></i>Execute</a>
-                    <a href="#" class="list-group-item active">Components</a>
-                    <a *ngFor="let component of components" (click)="addNode(component); saveProject()" class="list-group-item"><i class="fa fa-calculator mr-2"></i><span class='text-muted'>{{ component.name }}</span>/{{ component.author.username }}</a>
-                </div>                                 
+                    <p class="white-text list-group-item active">Components</p>
+                    <div class="row px-2">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <form class="form-inline active-pink active-pink-2">
+                            <input class="form-control w-100" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="searchParam" name="searchParam">
+                            </form>
+                        </div>
+                    </div>
+                    <a *ngFor="let component of getComponents()" (click)="addNode(component); saveProject()" class="list-group-item"><i class="fa fa-cubes mr-2"></i><span class='text-muted'>{{ component.author.username }}</span>/{{ component.name }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade right" id="outputModal" tabindex="-1">
+        <div class="modal-dialog modal-full-height modal-right">
+            <div class="modal-content" *ngIf="output">
+                <div class="list-group z-depth-0">
+                    <p class="white-text list-group-item active">Ouput Details</p>
+                </div>
+
+                <p class="list-group-item">Rank: {{ output?.rank }}</p>
+                <p class="list-group-item">Dimensions: {{ output?.dimensions }}</p>
+                <p class="white-text list-group-item active">Ouput Values</p>
+
+                <p *ngFor="let value of output.output" class="list-group-item">{{ value }}</p>
+                <p class="white-text list-group-item active">Output List</p>
+                <p class="list-group-item">{{ output?.values }}</p>
             </div>
         </div>
     </div>
@@ -87,13 +121,13 @@
                 Component Details
             </ng-template>
         </context-menu>
-          
+
     <context-menu #deleteEdgeMenu>
         <ng-template contextMenuItem let-item (execute)="$event.item.remove()">
             Delete
         </ng-template>
     </context-menu>
-    
+
     <context-menu #inputMenu>
         <ng-template contextMenuItem let-item (execute)="deleteNode($event.item)">
             Delete
