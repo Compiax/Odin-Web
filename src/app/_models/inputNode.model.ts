@@ -39,10 +39,10 @@ export class InputNode extends Node {
         const json = super.toJSON();
         json.type = 'Input';
         if (typeof this.values === 'string') {
-            this.values = this.values.split(',').map(i => parseInt(i, 10));
+            this.values = this.values.split(',').map(i => parseFloat(i));
         }
         if (typeof this.dimensions === 'string') {
-            this.dimensions = this.dimensions.split(',').map(i => parseInt(i, 10));
+            this.dimensions = this.dimensions.split(',').map(i => parseFloat(i));
         }
         json.variable = {
             values: this.values,

@@ -10,7 +10,7 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   private username: String;
-  private show = true;
+  private show = false;
 
   constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {
     this.eval();
@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
       this.updateUsername();
 
       const url = evt.url.substr(1, evt.url.length - 1).replace('/', '-');
-      if (url === 'login' || url === 'register'){
+      if (evt.url === '/' || url === 'login' || url === 'register'){
         this.show = false;
       } else {
         this.show = true;
