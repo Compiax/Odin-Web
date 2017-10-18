@@ -1,3 +1,4 @@
+import { ConstNode } from './../../_models/constNode.model';
 import { Edge } from './../../_models/edge.model';
 import { InputNode } from './../../_models/inputNode.model';
 import { OutputNode } from './../../_models/outputNode.model';
@@ -99,7 +100,9 @@ export class DesignspacePageComponent implements OnInit {
                   .setDimensions(node.variable.dimensions);
               } else if (node.type === 'Output') {
                 this.addOutput(node.coords, node.id);
-              } else {
+              } else if (node.type === 'Constant') {
+                this.addConst(node.coords, node.id);
+              } else{
                 this.addNode(node.component, node.coords, node.id);
               }
             });
@@ -212,6 +215,7 @@ export class DesignspacePageComponent implements OnInit {
    * Deletes a node
    */
   deleteNode(node: Node) {
+    self.contextMenuService.destroyLeafMenu();
     node.remove();
     this.nodes = this.nodes.filter(n => n.id !== node.id);
     saveProject();
@@ -308,6 +312,38 @@ export class DesignspacePageComponent implements OnInit {
   private addInput(coords?: { x: number, y: number}, id?: string) {
     coords = coords || { x: this.width / 2 - 100, y: this.height / 2 - 40};
     const node = new InputNode(this.svg.append('g'), coords, id);
+
+    // Set up drag handlers
+    node.outCircle
+      .call(d3Drag.drag()
+      .on('start', this.startEdgeDrag)
+      .on('drag', this.dragEdge)
+      .on('end', this.endEdgeDrag));
+    node.group.call(d3Drag.drag()
+      .on('drag', this.drag)
+      .on('end', this.endDrag));
+      this.nodes.push(node);
+
+    // Set up contextmenu
+    node.group.on('contextmenu', () => {
+      self.contextMenuService.destroyLeafMenu();
+      d3.event.preventDefault();
+      this.contextMenuService.show.next({
+        contextMenu: this.inputMenu,
+        event: d3.event,
+        item: node,
+      });
+      return false;
+    });
+    return node;
+  }
+
+  /**
+   * Adds an output node to the design
+   */
+  private addConst(coords?: { x: number, y: number}, id?: string) {
+    coords = coords || { x: this.width / 2 - 100, y: this.height / 2 - 40};
+    const node = new ConstNode(this.svg.append('g'), coords, id);
 
     // Set up drag handlers
     node.outCircle
