@@ -1,7 +1,10 @@
 <br>
 <div class="container">
     <div class="row">
-        <h1>{{ project?.name }}</h1><i class="fa fa-pencil fa-lg my-3 mx-2 edit-icon" data-toggle="modal" data-target="#nameModal"></i><i class="edit-icon fa fa-play mx-2 fa-lg my-3" (click)="executeSession()"></i><i class="edit-icon fa fa-share-square-o mx-2 fa-lg my-3" (click)="exportProject()"></i>
+        <h1>{{ project?.name }}</h1>
+        <i class="fa fa-pencil fa-lg my-3 mx-2 edit-icon" data-toggle="modal" data-target="#nameModal"></i>
+        <i class="edit-icon fa fa-play mx-2 fa-lg my-3" (click)="executeSession()"></i>
+        <i class="edit-icon fa fa-share-square-o mx-2 fa-lg my-3" (click)="exportProject()"></i>
     </div>
 </div>
 <svg class="grey lighten-3 m-0 p-0" #svgElement>
@@ -15,7 +18,12 @@
         <i class="fa fa-caret-right" data-toggle="modal" data-target="#componentsModal"></i>
     </a>
 </div>
-                                        
+
+<div class="fixed-action-btn show-output-button" *ngIf="output">
+    <a class="btn-floating btn-lg red">
+        <i class="fa fa-caret-left" data-toggle="modal" data-target="#outputModal"></i>
+    </a>
+</div>
 
 <div *ngIf="project">
     <div class="modal fade" id="nameModal" tabindex="-1" role="dialog">
@@ -68,7 +76,7 @@
     </div>
     <div *ngIf="components" class="modal fade left" id="componentsModal" tabindex="-1">
         <div class="modal-dialog modal-full-height modal-left">
-            <div class="modal-content">                   
+            <div class="modal-content">
                 <div class="list-group z-depth-0">
                     <a href="#" class="list-group-item active">Base</a>
                     <a (click)="addInput(); saveProject()" class="list-group-item"><i class="fa fa-pencil-square-o mr-2"></i>Input</a>
@@ -83,7 +91,30 @@
                         <input class="form-control w-100" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="searchParam" name="searchParam">
                       </form>
                     </div>
-                  </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="output" class="modal fade right" id="outputModal" tabindex="-1">
+        <div class="modal-dialog modal-full-height modal-right">
+            <div class="modal-content">
+                <div class="list-group z-depth-0">
+                    <a href="#" class="list-group-item active">Ouput Details</a>
+                </div>
+
+                <p class="output-label">Rank: {{output.rank}}</p>
+                <p class="output-label">Dimensions: {{output.dimensions}}</p>
+
+                <div class="list-group z-depth-0">
+                    <a href="#" class="list-group-item active">Ouput Values</a>
+                </div>
+
+                <span *ngFor="let value of output.output" class="output-label">{{value}}</span>
+
+                <div class="list-group z-depth-0">
+                    <a href="#" class="list-group-item active">Ouput List</a>
+                </div>
+                <p class="output-label">{{output.values}}</p>
             </div>
         </div>
     </div>
@@ -101,13 +132,13 @@
                 Component Details
             </ng-template>
         </context-menu>
-          
+
     <context-menu #deleteEdgeMenu>
         <ng-template contextMenuItem let-item (execute)="$event.item.remove()">
             Delete
         </ng-template>
     </context-menu>
-    
+
     <context-menu #inputMenu>
         <ng-template contextMenuItem let-item (execute)="deleteNode($event.item)">
             Delete
