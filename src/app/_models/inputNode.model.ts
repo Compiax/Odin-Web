@@ -23,6 +23,14 @@ export class InputNode extends Node {
         this.outCircle.attr('cy', y);
         this.text.attr('x', x);
         this.text.attr('y', y + 5);
+
+        console.log(this.dimensions);
+        if (this.dimensions.length === 1 && this.dimensions[0] == 1) {
+            // Is a scalar
+            this.text.text(this.values[0]);
+        } else {
+            this.text.text('IN');
+        }
     }
 
     public setValues(values: any) {

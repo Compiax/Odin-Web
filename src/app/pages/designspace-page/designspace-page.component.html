@@ -92,18 +92,18 @@
     </div>
     <div class="modal fade right" id="outputModal" tabindex="-1">
         <div class="modal-dialog modal-full-height modal-right">
-            <div class="modal-content">
+            <div class="modal-content" *ngIf="output">
                 <div class="list-group z-depth-0">
                     <p class="white-text list-group-item active">Ouput Details</p>
                 </div>
 
-                <p class="list-group-item">Rank: {{ output.rank }}</p>
-                <p class="list-group-item">Dimensions: {{ output.dimensions }}</p>
+                <p class="list-group-item">Rank: {{ output?.rank }}</p>
+                <p class="list-group-item">Dimensions: {{ output?.dimensions }}</p>
                 <p class="white-text list-group-item active">Ouput Values</p>
 
                 <p *ngFor="let value of output.output" class="list-group-item">{{ value }}</p>
                 <p class="white-text list-group-item active">Output List</p>
-                <p class="list-group-item">{{ output.values }}</p>
+                <p class="list-group-item">{{ output?.values }}</p>
             </div>
         </div>
     </div>
