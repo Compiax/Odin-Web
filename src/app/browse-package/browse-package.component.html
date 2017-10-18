@@ -1,7 +1,14 @@
 <!--View for package-->
 <br>
 <div class="container">
-  <app-search-box></app-search-box>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <form class="form-inline active-pink active-pink-2">
+        <input class="form-control w-100" type="text" placeholder="Search for packages" aria-label="Search" [(ngModel)]="searchParam" name="searchParam">
+      </form>
+    </div>
+  </div>
+
   <br>
   <br>
   <!-- Package header -->
@@ -18,9 +25,10 @@
     <h3 class="card-header red darken-2 white-text">Packages</h3>
     <div class="card-body">
       <div class="list-group">
-        <a *ngFor="let component of components" [routerLink]="['/packages', component.id]" class="list-group-item list-group-item-action flex-column align-items-start">
+        <a *ngFor="let component of getComponents()" class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1"><span class="red-text">{{ component.author.username }}</span>/{{ component.name }}</h5>
+            <h5 class="mb-1"><a [routerLink]="['/packages', component.id]"><span class="red-text">{{ component.author.username }}</span>/{{ component.name }}</a></h5>
+            <i style="cursor:pointer"class="fa fa-trash-o" (click)="deletePackage(component)"></i>
           </div>
           <p class="mb-1">{{ component.description }}</p>
         </a>

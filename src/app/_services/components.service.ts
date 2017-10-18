@@ -36,4 +36,13 @@ export class ComponentsService {
       });
     });
   }
+
+  /**
+   * Deletes a project
+   */
+  deleteComponent(component: ComponentModel) {
+    const url = `${environment.api_url}/components/${component.id}`;
+    return this.http.delete(url, {withCredentials: true})
+      .toPromise();
+  }
 }

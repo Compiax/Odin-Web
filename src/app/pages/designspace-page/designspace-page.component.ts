@@ -42,6 +42,7 @@ export class DesignspacePageComponent implements OnInit {
   public currentInputNode: any = null;
   public project: Project;
   private nodes: Node[] = [];
+  private searchParam = '';
 
   public output : VariableModel = null;
 
@@ -69,9 +70,6 @@ export class DesignspacePageComponent implements OnInit {
       self.svg.attr('transform', d3.event.transform);
     }));
 
-    // Load components
-    this.loadComponents();
-
     // Get ID of project and load it
     this.route.params.subscribe(params => {
       this.loadProject(params['id']);
@@ -82,6 +80,7 @@ export class DesignspacePageComponent implements OnInit {
    * Loads the project from the API
    */
   private loadProject(id: String) {
+    this.loadComponents();
     this.nodes.forEach(n => this.deleteNode(n));
     if (id === 'new') {
       this.project = new Project('Untitled Project', '');
@@ -97,8 +96,11 @@ export class DesignspacePageComponent implements OnInit {
           if (project.data) {
             const nodes = JSON.parse(project.data);
             nodes.forEach(node => {
+              console.log(node);
               if (node.type === 'Input') {
-                this.addInput(node.coords, node.id);
+                this.addInput(node.coords, node.id)
+                  .setValues(node.variable.values)
+                  .setDimensions(node.variable.dimensions);
               } else if (node.type === 'Output') {
                 this.addOutput(node.coords, node.id);
               } else {
@@ -106,9 +108,9 @@ export class DesignspacePageComponent implements OnInit {
               }
             });
             nodes.forEach(node => {
-              node.parents.forEach(edge => {
-                this.addEdge(this.getNode(edge).outCircle._groups[0][0], this.getNode(node.id).inCircle._groups[0][0]);
-              });
+              for (let x = 0; x < node.parents.length; x++) {
+                this.addEdge(this.getNode(node.parents[x]).outCircle._groups[0][0], this.getNode(node.id).inCircles[x]._groups[0][0]);
+              }
             });
           }
         });
@@ -143,11 +145,14 @@ export class DesignspacePageComponent implements OnInit {
       .on('start', this.startEdgeDrag)
       .on('drag', this.dragEdge)
       .on('end', this.endEdgeDrag));
-    node.inCircle
-      .call(d3Drag.drag()
-      .on('start', this.startEdgeDrag)
-      .on('drag', this.dragEdge)
-      .on('end', this.endEdgeDrag));
+
+    for (const circle of node.inCircles) {
+      circle.call(d3Drag.drag()
+        .on('start', this.startEdgeDrag)
+        .on('drag', this.dragEdge)
+        .on('end', this.endEdgeDrag));
+    }
+
     node.mainRect.call(d3Drag.drag()
       .on('drag', this.drag)
       .on('end', this.endDrag));
@@ -159,6 +164,7 @@ export class DesignspacePageComponent implements OnInit {
     if (node.component.author.username !== 'Math') {
       node.group.on('contextmenu', () => {
         d3.event.preventDefault();
+        self.contextMenuService.destroyLeafMenu();
         this.contextMenuService.show.next({
           contextMenu: this.componentMenu,
           event: d3.event,
@@ -168,6 +174,7 @@ export class DesignspacePageComponent implements OnInit {
       });
     } else {
       node.group.on('contextmenu', () => {
+        self.contextMenuService.destroyLeafMenu();
         d3.event.preventDefault();
         this.contextMenuService.show.next({
           contextMenu: this.deleteMenu,
@@ -236,6 +243,7 @@ export class DesignspacePageComponent implements OnInit {
 
       // Set up context menu
       edge.line.on('contextmenu', () => {
+        self.contextMenuService.destroyLeafMenu();
         d3.event.preventDefault();
         self.contextMenuService.show.next({
           contextMenu: self.deleteEdgeMenu,
@@ -275,7 +283,7 @@ export class DesignspacePageComponent implements OnInit {
     const node = new OutputNode(this.svg.append('g'), coords, id);
 
     // Set up drag handlers
-    node.inCircle
+    node.inCircles[0]
       .call(d3Drag.drag()
       .on('start', this.startEdgeDrag)
       .on('drag', this.dragEdge)
@@ -287,6 +295,7 @@ export class DesignspacePageComponent implements OnInit {
 
     // Set up contextmenu
     node.group.on('contextmenu', () => {
+      self.contextMenuService.destroyLeafMenu();
       d3.event.preventDefault();
       this.contextMenuService.show.next({
         contextMenu: this.deleteMenu,
@@ -317,6 +326,7 @@ export class DesignspacePageComponent implements OnInit {
 
     // Set up contextmenu
     node.group.on('contextmenu', () => {
+      self.contextMenuService.destroyLeafMenu();
       d3.event.preventDefault();
       this.contextMenuService.show.next({
         contextMenu: this.inputMenu,
@@ -325,6 +335,7 @@ export class DesignspacePageComponent implements OnInit {
       });
       return false;
     });
+    return node;
   }
 
   /**
@@ -394,6 +405,7 @@ export class DesignspacePageComponent implements OnInit {
     this.project.data = this.nodesToJSON();
     this.projectsService.export(this.project)
       .then(() => {
+        this.loadComponents();
         this.toastr.success('Project exported', 'Sucess!', {showCloseButton: true});
       })
       .catch(err => {
@@ -407,5 +419,21 @@ export class DesignspacePageComponent implements OnInit {
 
   componentDetails(node: ComponentNode) {
     this.router.navigateByUrl('/packages/' + node.component.id);
+  }
+
+  getComponents() {
+    if (this.searchParam === '') {
+      return this.components;
+    } else {
+      return this.components.filter(c => {
+        if (c.author.username.match(new RegExp(`.*${this.searchParam}.*`, 'i'))) {
+            return true;
+        } else if (c.name.match(new RegExp(`.*${this.searchParam}.*`, 'i'))) {
+            return true;
+        } else {
+            return false;
+        }
+      });
+    }
   }
 }

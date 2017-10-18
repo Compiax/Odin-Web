@@ -25,6 +25,16 @@ export class InputNode extends Node {
         this.text.attr('y', y + 5);
     }
 
+    public setValues(values: any) {
+        this.values = values;
+        return this;
+    }
+
+    public setDimensions(dimensions: any) {
+        this.dimensions = dimensions;
+        return this;
+    }
+
     public toJSON() {
         const json = super.toJSON();
         json.type = 'Input';

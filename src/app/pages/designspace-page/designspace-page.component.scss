@@ -6,9 +6,12 @@
 }
 
 svg {
+    padding: 0;
+    margin: 0;
     border: 1px solid #D32F2F;
     width: 100%;
-    height: calc(100vh - 143px);
+    height: 79%;
+    // height: calc(100vh - 143px);
 }
 
 input[type='text'] {
@@ -48,4 +51,9 @@ input[type='text'] {
 // No idea why this doesn't work
 .ngx-contextmenu a {
     color:black;
-  }
+}
+
+.active-pink-2 input[type=text]:focus:not([readonly]) {
+    border-bottom: 1px solid #d32f2f;
+    box-shadow: 0 1px 0 0 #d32f2f;
+}
