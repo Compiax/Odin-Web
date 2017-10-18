@@ -1,5 +1,5 @@
 .fakeEdge {
-    stroke: #BDBDBD; 
+    stroke: #BDBDBD;
     stroke-width: 2px;
     display:none;
     stroke-dasharray: 5 7;
@@ -23,6 +23,14 @@ input[type='text'] {
 .add-component-button {
     top: calc(100vh/2);
     left: -30px;
+    font-size: 6em;
+    height: 19vh;
+    width: 1%;
+}
+
+.show-output-button {
+    top: calc(100vh/2);
+    right: 18px;
     font-size: 6em;
     height: 19vh;
     width: 1%;
