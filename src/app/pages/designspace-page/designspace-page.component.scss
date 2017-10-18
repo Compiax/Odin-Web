@@ -40,6 +40,11 @@ input[type='text'] {
     cursor: pointer;
 }
 
+.output-label {
+  margin: 0px;
+  padding: 5px;
+}
+
 // No idea why this doesn't work
 .ngx-contextmenu a {
     color:black;

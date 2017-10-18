@@ -27,8 +27,8 @@ export class Edge {
     constructor(line: any, sourceCircle: any, targetCircle: any, id?: string) {
         this.id = (id || `edge-${UUID.UUID()}`);
         this.line = line;
-        console.log(sourceCircle)
-        console.log(targetCircle)
+        //console.log(sourceCircle)
+        //console.log(targetCircle)
         if (d3.select(sourceCircle).datum().type === 'input' && d3.select(targetCircle).datum().type === 'output') {
             this.target = d3.select(sourceCircle).datum().node;
             this.source = d3.select(targetCircle).datum().node;
